@@ -12,6 +12,6 @@ FOR T FROM 0 TO 50*PI STEP 0.1 DRAW(COS(T)+1/1.3*COS(1.3*T), SIN(T)-1/1.3*SIN(1.
 
 To parse and understand such a language, we have to create a system containing three main parts:
  
- - [x] Scanner (lexical analysis, 詞法分析)
- - [x] Parser (syntactic analysis, 語法分析)
- - [ ] Semantic (semantic analysis, 語義分析)
+ 1. [x] Scanner (lexical analysis, 詞法分析)
+ 2. [x] Parser (syntactic analysis, 語法分析)
+ 3. [] Semantic (semantic analysis, 語義分析)

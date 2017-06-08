@@ -1,5 +1,5 @@
 /*
- *                                                                _
+ *                                                               _
  *   _____  _                           ____  _                 |_|
  *  |  _  |/ \   ____  ____ __ ___     / ___\/ \   __   _  ____  _
  *  | |_| || |  / __ \/ __ \\ '_  \ _ / /    | |___\ \ | |/ __ \| |
@@ -10,17 +10,17 @@
  *             More than a coder, More than a designer
  *  ===============================================================
  *
- *  - Document: token.js
+ *  - Document: content.js
  *  - Author: aleen42
- *  - Description: A data structure for notations
- *  - Create Time: May, 30th, 2017
- *  - Update Time: May, 30th, 2017
+ *  - Description: A data structure
+ *  - Create Time: May, 31st, 2017
+ *  - Update Time: May, 31st, 2017
  *
  */
 
-export default function Token(type, lexeme, value, callback) {
-    this.type = type;
-    this.lexeme = lexeme;
-    this.value = value;
-    this.callback = callback;
+export default function Content() {
+    this.caseOperator = null;
+    this.caseFunc = null;
+    this.caseConst = null;
+    this.caseParamPtr = null;
 };

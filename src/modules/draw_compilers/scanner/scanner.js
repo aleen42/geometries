@@ -1,5 +1,5 @@
 /*
- *                                                                _
+ *                                                               _
  *   _____  _                           ____  _                 |_|
  *  |  _  |/ \   ____  ____ __ ___     / ___\/ \   __   _  ____  _
  *  | |_| || |  / __ \/ __ \\ '_  \ _ / /    | |___\ \ | |/ __ \| |
@@ -14,28 +14,14 @@
  *  - Author: aleen42
  *  - Description: A scanner module for scanning validated content
  *  - Create Time: May, 30th, 2017
- *  - Update Time: May, 30th, 2017
+ *  - Update Time: Jun, 8th, 2017
  *
  */
 
 import Util from 'util/index';
-import Token from 'compilers/token';
+import Token from 'compilers/scanner/token';
 
 function Scanner() {
-    this.tokenTypeName = [
-        'ORIGIN', 'SCALE', 'ROT', 'IS', /** reserved keyword */
-        'TO', 'STEP', 'DRAW', 'FOR', 'FROM', /** reserved keyword */
-        'T', /** parameter */
-        'SEMICOLON', 'L_BRACKET', 'R_BRACKET', 'COMMA', /** separators */
-        'PLUS', 'MINUS', 'MUL', 'DIV', 'POWER', /** operators */
-        'FUNC', /** function (called) */
-        'CONST_ID', /** constant */
-        'NONTOKEN', /** empty notation (the end of a program) */
-        'ERRTOKEN' /** error notation (invalid input) */
-    ];
-
-    this.tokenType = Util.enumerate(this.tokenTypeName);
-
     this.MAXSIZE = 10000; /** the max type of notations */
     this.MAX_TOKEN_LEN = 100000; /** the max length of notations */
 
@@ -46,26 +32,40 @@ function Scanner() {
     this.tokenBuffer = '';
 }
 
+Scanner.tokenTypeName = [
+    'ORIGIN', 'SCALE', 'ROT', 'IS', /** reserved keyword */
+    'TO', 'STEP', 'DRAW', 'FOR', 'FROM', /** reserved keyword */
+    'T', /** parameter */
+    'SEMICOLON', 'L_BRACKET', 'R_BRACKET', 'COMMA', /** separators */
+    'PLUS', 'MINUS', 'MUL', 'DIV', 'POWER', /** operators */
+    'FUNC', /** function (called) */
+    'CONST_ID', /** constant */
+    'NONTOKEN', /** empty notation (the end of a program) */
+    'ERRTOKEN' /** error notation (invalid input) */
+];
+
+Scanner.tokenType = Util.enumerate(Scanner.tokenTypeName);
+
 Scanner.prototype.initTokenTab = function () {
     const tokenList = [
-        { type: this.tokenType.CONST_ID, lexeme: 'PI', value: 3.1415926, callback: null },
-        { type: this.tokenType.CONST_ID, lexeme: 'E', value: 2.71828, callback: null },
-        { type: this.tokenType.T, lexeme: 'T', value: 0.0, callback: null },
-        { type: this.tokenType.FUNC, lexeme: 'SIN', value: 0.0, callback: Math.sin },
-        { type: this.tokenType.FUNC, lexeme: 'COS', value: 0.0, callback: Math.cos },
-        { type: this.tokenType.FUNC, lexeme: 'TAN', value: 0.0, callback: Math.tan },
-        { type: this.tokenType.FUNC, lexeme: 'LN', value: 0.0, callback: Math.log },
-        { type: this.tokenType.FUNC, lexeme: 'EXP', value: 0.0, callback: Math.exp },
-        { type: this.tokenType.FUNC, lexeme: 'SQRT', value: 0.0, callback: Math.sqrt },
-        { type: this.tokenType.ORIGIN, lexeme: 'ORIGIN', value: 0.0, callback: null },
-        { type: this.tokenType.SCALE, lexeme: 'SCALE', value: 0.0, callback: null },
-        { type: this.tokenType.ROT, lexeme: 'ROT', value: 0.0, callback: null },
-        { type: this.tokenType.IS, lexeme: 'IS', value: 0.0, callback: null },
-        { type: this.tokenType.FOR, lexeme: 'FOR', value: 0.0, callback: null },
-        { type: this.tokenType.FROM, lexeme: 'FROM', value: 0.0, callback: null },
-        { type: this.tokenType.TO, lexeme: 'TO', value: 0.0, callback: null },
-        { type: this.tokenType.STEP, lexeme: 'STEP', value: 0.0, callback: null },
-        { type: this.tokenType.DRAW, lexeme: 'DRAW', value: 0.0, callback: null }
+        { type: Scanner.tokenType.CONST_ID, lexeme: 'PI', value: 3.1415926, callback: null },
+        { type: Scanner.tokenType.CONST_ID, lexeme: 'E', value: 2.71828, callback: null },
+        { type: Scanner.tokenType.T, lexeme: 'T', value: 0.0, callback: null },
+        { type: Scanner.tokenType.FUNC, lexeme: 'SIN', value: 0.0, callback: Math.sin },
+        { type: Scanner.tokenType.FUNC, lexeme: 'COS', value: 0.0, callback: Math.cos },
+        { type: Scanner.tokenType.FUNC, lexeme: 'TAN', value: 0.0, callback: Math.tan },
+        { type: Scanner.tokenType.FUNC, lexeme: 'LN', value: 0.0, callback: Math.log },
+        { type: Scanner.tokenType.FUNC, lexeme: 'EXP', value: 0.0, callback: Math.exp },
+        { type: Scanner.tokenType.FUNC, lexeme: 'SQRT', value: 0.0, callback: Math.sqrt },
+        { type: Scanner.tokenType.ORIGIN, lexeme: 'ORIGIN', value: 0.0, callback: null },
+        { type: Scanner.tokenType.SCALE, lexeme: 'SCALE', value: 0.0, callback: null },
+        { type: Scanner.tokenType.ROT, lexeme: 'ROT', value: 0.0, callback: null },
+        { type: Scanner.tokenType.IS, lexeme: 'IS', value: 0.0, callback: null },
+        { type: Scanner.tokenType.FOR, lexeme: 'FOR', value: 0.0, callback: null },
+        { type: Scanner.tokenType.FROM, lexeme: 'FROM', value: 0.0, callback: null },
+        { type: Scanner.tokenType.TO, lexeme: 'TO', value: 0.0, callback: null },
+        { type: Scanner.tokenType.STEP, lexeme: 'STEP', value: 0.0, callback: null },
+        { type: Scanner.tokenType.DRAW, lexeme: 'DRAW', value: 0.0, callback: null }
     ];
 
     for (let i = 0, len = tokenList.length; i < len; i++) {
@@ -82,6 +82,10 @@ Scanner.prototype.clearAll = function () {
     this.index = 0;
     this.lineNumber = 0;
     this.tokenBuffer = '';
+};
+
+Scanner.prototype.close = function () {
+    this.index = 0;
 };
 
 Scanner.prototype.readInput = function (text) {
@@ -123,7 +127,7 @@ Scanner.prototype.judgeKeyToken = function (idString) {
         }
     }
 
-    return new Token(this.tokenType.ERRTOKEN, '', 0.0, null);
+    return new Token(Scanner.tokenType.ERRTOKEN, '', 0.0, null);
 };
 
 Scanner.prototype.getToken = function () {
@@ -139,7 +143,7 @@ Scanner.prototype.getToken = function () {
         character = this.getChar();
 
         if (character.charCodeAt(0) === 0) {
-            return new Token(this.tokenType.NONTOKEN, '', 0.0, null);
+            return new Token(Scanner.tokenType.NONTOKEN, '', 0.0, null);
         }
 
         if (character === '\r' || character === '\n') {
@@ -209,24 +213,24 @@ Scanner.prototype.getToken = function () {
 
         this.index--;
         str += this.tokenBuffer;
-        token = new Token(this.tokenType.CONST_ID, parseFloat(str).toString(), parseFloat(str), null);
+        token = new Token(Scanner.tokenType.CONST_ID, parseFloat(str).toString(), parseFloat(str), null);
         return token;
     } else {
         switch (character) {
         case ':':
-            token = new Token(this.tokenType.SEMICOLON, ':', 0.0, null);
+            token = new Token(Scanner.tokenType.SEMICOLON, ':', 0.0, null);
             break;
         case '(':
-            token = new Token(this.tokenType.L_BRACKET, '(', 0.0, null);
+            token = new Token(Scanner.tokenType.L_BRACKET, '(', 0.0, null);
             break;
         case ')':
-            token = new Token(this.tokenType.R_BRACKET, ')', 0.0, null);
+            token = new Token(Scanner.tokenType.R_BRACKET, ')', 0.0, null);
             break;
         case ',':
-            token = new Token(this.tokenType.COMMA, ',', 0.0, null);
+            token = new Token(Scanner.tokenType.COMMA, ',', 0.0, null);
             break;
         case '+':
-            token = new Token(this.tokenType.PLUS, '+', 0.0, null);
+            token = new Token(Scanner.tokenType.PLUS, '+', 0.0, null);
             break;
         case '-':
             character = this.getChar();
@@ -238,7 +242,7 @@ Scanner.prototype.getToken = function () {
             } else {
                 /** binary operations */
                 this.index--;
-                token = new Token(this.tokenType.MINUS, '-', 0.0, null);
+                token = new Token(Scanner.tokenType.MINUS, '-', 0.0, null);
                 break;
             }
         case '/':
@@ -251,22 +255,22 @@ Scanner.prototype.getToken = function () {
             } else {
                 /** binary operations */
                 this.index--;
-                token = new Token(this.tokenType.DIV, '/', 0.0, null);
+                token = new Token(Scanner.tokenType.DIV, '/', 0.0, null);
                 break;
             }
         case '*':
             character = this.getChar();
 
             if (character === '*') {
-                token = new Token(this.tokenType.POWER, '^', 0.0, null);
+                token = new Token(Scanner.tokenType.POWER, '^', 0.0, null);
             } else {
                 /** binary operations */
                 this.index--;
-                token = new Token(this.tokenType.MUL, '*', 0.0, null);
+                token = new Token(Scanner.tokenType.MUL, '*', 0.0, null);
             }
             break;
         default:
-            token = new Token(this.tokenType.ERRTOKEN, '', 0.0, null);
+            token = new Token(Scanner.tokenType.ERRTOKEN, '', 0.0, null);
             break;
         }
     }

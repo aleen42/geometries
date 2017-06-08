@@ -1,4 +1,4 @@
-/******************************************************************
+/*
  *                                                               _
  *   _____  _                           ____  _                 |_|
  *  |  _  |/ \   ____  ____ __ ___     / ___\/ \   __   _  ____  _
@@ -10,25 +10,15 @@
  *             More than a coder, More than a designer
  *  ===============================================================
  *
- *  - Document: util.js
+ *  - Document: caseFunc.js
  *  - Author: aleen42
- *  - Description: A util file for making some external functions
-                   for helping
- *  - Create Time: May, 30th, 2017
- *  - Update Time: Jun, 8th, 2017
+ *  - Description: A data structure
+ *  - Create Time: May, 31st, 2017
+ *  - Update Time: May, 31st, 2017
  *
- *****************************************************************/
+ */
 
-function Util() {}
-
-Util.enumerate = arr => {
-    var returnObj = {};
-
-    arr.forEach((item, index) => {
-        returnObj[item] = index;
-    });
-
-    return returnObj;
+export default function CaseFunc(childNode, mathFunc) {
+    this.childNode = childNode;
+    this.mathFunc = mathFunc;
 };
-
-export default Util;

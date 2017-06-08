@@ -1,4 +1,4 @@
-/******************************************************************
+/*
  *                                                               _
  *   _____  _                           ____  _                 |_|
  *  |  _  |/ \   ____  ____ __ ___     / ___\/ \   __   _  ____  _
@@ -10,25 +10,17 @@
  *             More than a coder, More than a designer
  *  ===============================================================
  *
- *  - Document: util.js
+ *  - Document: token.js
  *  - Author: aleen42
- *  - Description: A util file for making some external functions
-                   for helping
+ *  - Description: A data structure for notations
  *  - Create Time: May, 30th, 2017
  *  - Update Time: Jun, 8th, 2017
  *
- *****************************************************************/
+ */
 
-function Util() {}
-
-Util.enumerate = arr => {
-    var returnObj = {};
-
-    arr.forEach((item, index) => {
-        returnObj[item] = index;
-    });
-
-    return returnObj;
+export default function Token(type, lexeme, value, callback) {
+    this.type = type;
+    this.lexeme = lexeme;
+    this.value = value;
+    this.callback = callback;
 };
-
-export default Util;
