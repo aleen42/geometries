@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: A parser module for parsing content
  *  - Create Time: May, 31st, 2017
- *  - Update Time: Jun, 8th, 2017
+ *  - Update Time: Oct, 12nd, 2017
  *
  */
 
@@ -209,6 +209,8 @@ Parser.prototype.makeExprNode = function (tokenType, leftNode, rightNode, funcPt
 };
 
 Parser.prototype.program = function () {
+    var self = this;
+
     /** Statement Recursive Function */
     function statement() {
         /** Expression Recursive Function */
@@ -223,66 +225,66 @@ Parser.prototype.program = function () {
                         function atom() {
                             let addressNode;
                             let tempNode;
-                            let curToken = this.token;
+                            let curToken = self.token;
 
-                            this.enter('atom');
+                            self.enter('atom');
 
-                            switch (this.token.type) {
+                            switch (self.token.type) {
                             case Scanner.tokenType.CONST_ID:
-                                this.matchToken(Scanner.tokenType.CONST_ID);
-                                addressNode = this.makeExprNode(Scanner.tokenType.CONST_ID, curToken.value, null, null);
+                                self.matchToken(Scanner.tokenType.CONST_ID);
+                                addressNode = self.makeExprNode(Scanner.tokenType.CONST_ID, curToken.value, null, null);
                                 break;
                             case Scanner.tokenType.T:
-                                this.matchToken(Scanner.tokenType.T);
-                                addressNode = this.makeExprNode(Scanner.tokenType.T, null, null, null);
+                                self.matchToken(Scanner.tokenType.T);
+                                addressNode = self.makeExprNode(Scanner.tokenType.T, null, null, null);
                                 break;
                             case Scanner.tokenType.FUNC:
-                                this.matchToken(Scanner.tokenType.FUNC);
-                                this.matchToken(Scanner.tokenType.L_BRACKET);
+                                self.matchToken(Scanner.tokenType.FUNC);
+                                self.matchToken(Scanner.tokenType.L_BRACKET);
                                 tempNode = expression.call(this);
-                                addressNode = this.makeExprNode(Scanner.tokenType.FUNC, null, tempNode, this.token.callback);
-                                this.matchToken(Scanner.tokenType.R_BRACKET);
+                                addressNode = self.makeExprNode(Scanner.tokenType.FUNC, null, tempNode, self.token.callback);
+                                self.matchToken(Scanner.tokenType.R_BRACKET);
                                 break;
                             case Scanner.tokenType.L_BRACKET:
-                                this.matchToken(Scanner.tokenType.L_BRACKET);
+                                self.matchToken(Scanner.tokenType.L_BRACKET);
                                 addressNode = expression.call(this);
-                                this.matchToken(Scanner.tokenType.R_BRACKET);
+                                self.matchToken(Scanner.tokenType.R_BRACKET);
                                 break;
                             default:
-                                this.syntaxError('Unexpected Token');
+                                self.syntaxError('Unexpected Token');
                                 return null;
                             }
 
-                            this.back('atom');
+                            self.back('atom');
                             return addressNode;
                         }
 
                         let leftNode;
                         let rightNode;
 
-                        this.enter('Component');
+                        self.enter('Component');
 
                         leftNode = atom.call(this);
-                        if (this.token.type === Scanner.tokenType.POWER) {
-                            this.matchToken(Scanner.tokenType.POWER);
+                        if (self.token.type === Scanner.tokenType.POWER) {
+                            self.matchToken(Scanner.tokenType.POWER);
                             rightNode = component.call(this);
-                            leftNode = this.makeExprNode(Scanner.tokenType.POWER, leftNode, rightNode, null);
+                            leftNode = self.makeExprNode(Scanner.tokenType.POWER, leftNode, rightNode, null);
                         }
 
-                        this.back('Component');
+                        self.back('Component');
                         return leftNode;
                     }
 
                     let leftNode;
                     let rightNode;
 
-                    this.enter('Factor');
+                    self.enter('Factor');
 
-                    if (this.token.type === Scanner.tokenType.PLUS) {
-                        this.matchToken(Scanner.tokenType.PLUS);
+                    if (self.token.type === Scanner.tokenType.PLUS) {
+                        self.matchToken(Scanner.tokenType.PLUS);
                         rightNode = factor.call(this);
-                    } else if (this.token.type === Scanner.tokenType.MINUS) {
-                        this.matchToken(Scanner.tokenType.MINUS);
+                    } else if (self.token.type === Scanner.tokenType.MINUS) {
+                        self.matchToken(Scanner.tokenType.MINUS);
                         rightNode = factor.call(this);
 
                         const transparent = new Content();
@@ -290,106 +292,106 @@ Parser.prototype.program = function () {
 
                         leftNode = new ExprNode(Scanner.tokenType.CONST_ID, transparent);
 
-                        rightNode = this.makeExprNode(Scanner.tokenType.MINUS, leftNode, rightNode, null);
+                        rightNode = self.makeExprNode(Scanner.tokenType.MINUS, leftNode, rightNode, null);
                     } else {
                         rightNode = component.call(this);
                     }
 
-                    this.back('Factor');
+                    self.back('Factor');
                     return rightNode;
                 }
 
-                this.enter('Term');
+                self.enter('Term');
 
                 let leftNode = factor.call(this);
 
-                this.back('Term');
+                self.back('Term');
                 return leftNode;
             }
 
-            this.enter('Expression');
+            self.enter('Expression');
 
             let leftNode = term.call(this);
 
-            this.back('Expression');
+            self.back('Expression');
             return leftNode;
         }
 
-        this.enter('Statement');
+        self.enter('Statement');
 
-        switch(this.token.type) {
+        switch(self.token.type) {
         case Scanner.tokenType.ORIGIN:
             /** Origin Statement */
             let tempNode = new ExprNode();
 
-            this.enter('Origin Statement');
+            self.enter('Origin Statement');
 
-            this.matchToken(Scanner.tokenType.ORIGIN);
-            this.matchToken(Scanner.tokenType.IS);
-            this.matchToken(Scanner.tokenType.L_BRACKET);
+            self.matchToken(Scanner.tokenType.ORIGIN);
+            self.matchToken(Scanner.tokenType.IS);
+            self.matchToken(Scanner.tokenType.L_BRACKET);
 
             tempNode = expression.call(this);
 
-            if (!this.PARSE_DEBUG) {
-                this.originX = Semantic.getExprssionValue(tempNode);
+            if (!self.PARSE_DEBUG) {
+                self.originX = Semantic.getExprssionValue(tempNode);
                 Semantic.deleteExpressionTree(tempNode);
             }
 
-            this.matchToken(Scanner.tokenType.R_BRACKET);
+            self.matchToken(Scanner.tokenType.R_BRACKET);
 
-            this.back('Origin Statement');
+            self.back('Origin Statement');
 
             break;
         case Scanner.tokenType.SCALE:
             /** Scale Statement */
             let tempNode = new ExprNode();
 
-            this.enter('Scale Statement');
+            self.enter('Scale Statement');
 
-            this.matchToken(Scanner.tokenType.ORIGIN);
-            this.matchToken(Scanner.tokenType.IS);
-            this.matchToken(Scanner.tokenType.L_BRACKET);
+            self.matchToken(Scanner.tokenType.ORIGIN);
+            self.matchToken(Scanner.tokenType.IS);
+            self.matchToken(Scanner.tokenType.L_BRACKET);
 
             tempNode = expression.call(this);
 
-            if (!this.PARSE_DEBUG) {
+            if (!self.PARSE_DEBUG) {
                 /** get the ratio factor of X axis */
-                this.scaleX = Semantic.getExprssionValue(tempNode);
+                self.scaleX = Semantic.getExprssionValue(tempNode);
                 Semantic.deleteExpressionTree(tempNode);
             }
 
-            this.matchToken(Scanner.tokenType.COMMA);
+            self.matchToken(Scanner.tokenType.COMMA);
 
             tempNode = expression.call(this);
 
-            if (!this.PARSE_DEBUG) {
+            if (!self.PARSE_DEBUG) {
                 /** get the ratio factor of Y axis */
-                this.scaleY = Semantic.getExprssionValue(tempNode);
+                self.scaleY = Semantic.getExprssionValue(tempNode);
                 Semantic.deleteExpressionTree(tempNode);
             }
 
-            this.matchToken(Scanner.tokenType.R_BRACKET);
+            self.matchToken(Scanner.tokenType.R_BRACKET);
 
-            this.back('Scale Statement');
+            self.back('Scale Statement');
             break;
         case Scanner.tokenType.ROT:
             /** Rotate Statement */
             let tempNode = new ExprNode();
 
-            this.enter('Rotate Statement');
+            self.enter('Rotate Statement');
 
-            this.matchToken(Scanner.tokenType.ROT);
-            this.matchToken(Scanner.tokenType.IS);
+            self.matchToken(Scanner.tokenType.ROT);
+            self.matchToken(Scanner.tokenType.IS);
 
             tempNode = expression.call(this);
 
-            if (!this.PARSE_DEBUG) {
+            if (!self.PARSE_DEBUG) {
                 /** get the rotate angle */
-                this.rotateAngle = Semantic.getExprssionValue(tempNode);
+                self.rotateAngle = Semantic.getExprssionValue(tempNode);
                 Semantic.deleteExpressionTree(tempNode);
             }
 
-            this.back('Rotate Statement');
+            self.back('Rotate Statement');
             break;
         case Scanner.tokenType.FOR:
             /** Loop Statement */
@@ -406,90 +408,90 @@ Parser.prototype.program = function () {
             let x;
             let y;
 
-            this.enter('Loop Statement');
+            self.enter('Loop Statement');
 
-            this.matchToken(Scanner.tokenType.FOR);
-            this.match('FOR');
-            this.matchToken(Scanner.tokenType.T);
-            this.match('T');
-            this.matchToken(Scanner.tokenType.FROM);
-            this.match('FROM');
+            self.matchToken(Scanner.tokenType.FOR);
+            self.match('FOR');
+            self.matchToken(Scanner.tokenType.T);
+            self.match('T');
+            self.matchToken(Scanner.tokenType.FROM);
+            self.match('FROM');
 
             /** calculate the value of start point to draw */
             startNode = expression.call(this);
 
-            if (!this.PARSE_DEBUG) {
+            if (!self.PARSE_DEBUG) {
                 start = Semantic.getExprssionValue(startNode);
                 Semantic.deleteExpressionTree(startNode);
             }
 
-            this.matchToken(Scanner.tokenType.TO);
-            this.match('TO');
+            self.matchToken(Scanner.tokenType.TO);
+            self.match('TO');
 
             /** calculate the value of end point to draw */
             endNode = expression.call(this);
 
-            if (!this.PARSE_DEBUG) {
+            if (!self.PARSE_DEBUG) {
                 end = Semantic.getExprssionValue(endNode);
                 Semantic.deleteExpressionTree(endNode);
             }
 
-            this.matchToken(Scanner.tokenType.STEP);
+            self.matchToken(Scanner.tokenType.STEP);
             stepNode = expression().call(this);
 
-            if (!this.PARSE_DEBUG) {
+            if (!self.PARSE_DEBUG) {
                 step = Semantic.getExprssionValue(stepNode);
                 Semantic.deleteExpressionTree(stepNode);
             }
 
-            this.matchToken(Scanner.tokenType.DRAW);
-            this.match('DRAW');
+            self.matchToken(Scanner.tokenType.DRAW);
+            self.match('DRAW');
 
-            this.matchToken(Scanner.tokenType.L_BRACKET);
-            this.match('(');
+            self.matchToken(Scanner.tokenType.L_BRACKET);
+            self.match('(');
 
             x = expression.call(this);
 
-            this.matchToken(Scanner.tokenType.COMMA);
-            this.match(',');
+            self.matchToken(Scanner.tokenType.COMMA);
+            self.match(',');
 
             y = expression.call(this);
 
-            this.matchToken(Scanner.tokenType.R_BRACKET);
-            this.match(')');
+            self.matchToken(Scanner.tokenType.R_BRACKET);
+            self.match(')');
 
-            if (!this.PARSER_DEBUG) {
+            if (!self.PARSER_DEBUG) {
                 Semantic.DrawLoop(start, end, step, x, y);
                 Semantic.DelExprTree(x);
                 Semantic.DelExprTree(y);
             }
 
-            this.back('Loop Statement');
+            self.back('Loop Statement');
             break;
         default:
-            this.syntaxError('Unexpected Token');
-            this.errorLineNumber = this.scanner.lineNumber;
+            self.syntaxError('Unexpected Token');
+            self.errorLineNumber = self.scanner.lineNumber;
             break;
         }
 
-        this.back('Statement');
+        self.back('Statement');
     }
 
-    this.enter('Program');
+    self.enter('Program');
 
     for (;;) {
-        if (this.token.type === Scanner.tokenType.NONTOKEN) {
+        if (self.token.type === Scanner.tokenType.NONTOKEN) {
             break;
         }
 
-        if (this.scanner.lineNumber !== this.errorLineNumber) {
+        if (self.scanner.lineNumber !== self.errorLineNumber) {
             statement.call(this);
         }
 
-        this.matchToken(Scanner.tokenType.SEMICOLON)
+        self.matchToken(Scanner.tokenType.SEMICOLON)
     }
 
-    this.back('Program');
+    self.back('Program');
 };
 
 export default Parser;
