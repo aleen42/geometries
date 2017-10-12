@@ -43,7 +43,10 @@ function Parser(str) {
     this.scaleY = 1;
     this.rotateAngle = 0;
 
+    /** using scanner and semantic to complete parsing */
     this.scanner = new Scanner();
+    this.semantic = new Semantic(this);
+
     this.token = null;
 
     /** the entrance of Parser */
@@ -363,8 +366,8 @@ Parser.prototype.program = function () {
             tempNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
-                self.originX = Semantic.getExprssionValue(tempNode);
-                Semantic.deleteExpressionTree(tempNode);
+                self.originX = this.semantic.getExpressionValue(tempNode);
+                self.semantic.deleteExpressionTree(tempNode);
             }
 
             self.matchToken(TokenType.COMMA);
@@ -392,8 +395,8 @@ Parser.prototype.program = function () {
 
             if (!self.PARSE_DEBUG) {
                 /** get the ratio factor of X axis */
-                self.scaleX = Semantic.getExprssionValue(tempNode);
-                Semantic.deleteExpressionTree(tempNode);
+                self.scaleX = self.semantic.getExpressionValue(tempNode);
+                self.semantic.deleteExpressionTree(tempNode);
             }
 
             self.matchToken(TokenType.COMMA);
@@ -402,8 +405,8 @@ Parser.prototype.program = function () {
 
             if (!self.PARSE_DEBUG) {
                 /** get the ratio factor of Y axis */
-                self.scaleY = Semantic.getExprssionValue(tempNode);
-                Semantic.deleteExpressionTree(tempNode);
+                self.scaleY = self.semantic.getExpressionValue(tempNode);
+                self.semantic.deleteExpressionTree(tempNode);
             }
 
             self.matchToken(TokenType.R_BRACKET);
@@ -421,8 +424,8 @@ Parser.prototype.program = function () {
 
             if (!self.PARSE_DEBUG) {
                 /** get the rotate angle */
-                self.rotateAngle = Semantic.getExprssionValue(tempNode);
-                Semantic.deleteExpressionTree(tempNode);
+                self.rotateAngle = self.semantic.getExpressionValue(tempNode);
+                self.semantic.deleteExpressionTree(tempNode);
             }
 
             self.back('Rotate Statement');
@@ -452,8 +455,8 @@ Parser.prototype.program = function () {
             startNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
-                start = Semantic.getExprssionValue(startNode);
-                Semantic.deleteExpressionTree(startNode);
+                start = self.semantic.getExpressionValue(startNode);
+                self.semantic.deleteExpressionTree(startNode);
             }
 
             self.matchToken(TokenType.TO);
@@ -462,16 +465,16 @@ Parser.prototype.program = function () {
             endNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
-                end = Semantic.getExprssionValue(endNode);
-                Semantic.deleteExpressionTree(endNode);
+                end = self.semantic.getExpressionValue(endNode);
+                self.semantic.deleteExpressionTree(endNode);
             }
 
             self.matchToken(TokenType.STEP);
             stepNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
-                step = Semantic.getExprssionValue(stepNode);
-                Semantic.deleteExpressionTree(stepNode);
+                step = self.semantic.getExpressionValue(stepNode);
+                self.semantic.deleteExpressionTree(stepNode);
             }
 
             self.matchToken(TokenType.DRAW);
@@ -486,9 +489,9 @@ Parser.prototype.program = function () {
             self.matchToken(TokenType.R_BRACKET);
 
             if (!self.PARSER_DEBUG) {
-                Semantic.DrawLoop(start, end, step, x, y);
-                Semantic.DelExprTree(x);
-                Semantic.DelExprTree(y);
+                self.semantic.drawLoop(start, end, step, x, y);
+                self.semantic.deleteExpressionTree(x);
+                self.semantic.deleteExpressionTree(y);
             }
 
             self.back('Loop Statement');
