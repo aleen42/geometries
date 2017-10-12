@@ -19,8 +19,18 @@
  */
 
 export default function Content() {
-    this.caseOperator = null;
-    this.caseFunc = null;
+    /** binary operators */
+    this.caseOperator = {
+        leftNode: null,
+        rightNode: null
+    };
+    /** functions */
+    this.caseFunc = {
+        mathFunc: null,
+        childNode: null
+    };
+    /** const */
     this.caseConst = null;
+    /** parameter pointer */
     this.caseParamPtr = null;
 };

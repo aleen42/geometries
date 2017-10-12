@@ -106,6 +106,9 @@ Parser.prototype.printSyntaxTree = function (root, indent) {
     case TokenType.MINUS:
         console.log(`${info} -`);
         break;
+    case TokenType.MUL:
+        console.log(`${info} *`);
+        break;
     case TokenType.DIV:
         console.log(`${info} /`);
         break;
@@ -134,14 +137,14 @@ Parser.prototype.printSyntaxTree = function (root, indent) {
     if (root.tokenType === TokenType.FUNC) {
         this.printSyntaxTree(root.content.caseFunc.childNode, indent + 1);
     } else {
-        this.printSyntaxTree(root.content.caseFunc.leftNode, indent + 1);
-        this.printSyntaxTree(root.content.caseFunc.rightNode, indent + 1);
     }
 };
 
 Parser.prototype.traceTree = function (node) {
     if (this.PARSE_DEBUG) {
         this.printSyntaxTree(node, 1);
+        this.printSyntaxTree(root.content.caseOperator.leftNode, indent + 1);
+        this.printSyntaxTree(root.content.caseOperator.rightNode, indent + 1);
     }
 };
 
@@ -306,6 +309,19 @@ Parser.prototype.program = function () {
                 self.enter('Term');
 
                 let leftNode = factor.call(self);
+                let rightNode;
+
+                for (;;) {
+                    if (self.token.type !== TokenType.MUL && self.token.type !== TokenType.DIV) {
+                        break;
+                    }
+
+                    const tempTokenType = self.token.type;
+                    self.matchToken(tempTokenType);
+                    rightNode = factor.call(self);
+                    leftNode = self.makeExprNode(tempTokenType, leftNode, rightNode, null);
+                }
+
 
                 self.back('Term');
                 return leftNode;
@@ -314,6 +330,18 @@ Parser.prototype.program = function () {
             self.enter('Expression');
 
             let leftNode = term.call(self);
+            let rightNode;
+
+            for (;;) {
+                if (self.token.type !== TokenType.PLUS && self.token.type !== TokenType.MINUS) {
+                    break;
+                }
+
+                const tempTokenType = self.token.type;
+                self.matchToken(tempTokenType);
+                rightNode = term.call(self);
+                leftNode = self.makeExprNode(tempTokenType, leftNode, rightNode, null);
+            }
 
             self.back('Expression');
             return leftNode;
@@ -341,8 +369,16 @@ Parser.prototype.program = function () {
 
             self.matchToken(TokenType.COMMA);
 
-            self.back('Origin Statement');
+            tempNode = expression.call(self);
 
+            if (!self.PARSE_DEBUG) {
+                self.originY = this.semantic.getExpressionValue(tempNode);
+                self.semantic.deleteExpressionTree(tempNode);
+            }
+
+            self.matchToken(TokenType.R_BRACKET);
+
+            self.back('Origin Statement');
             break;
         case TokenType.SCALE:
             /** Scale Statement */
