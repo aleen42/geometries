@@ -18,7 +18,7 @@
  *
  */
 
-import Util from 'util/index';
+import { TokenType } from 'compilers/common/tokenType';
 import Token from 'compilers/scanner/token';
 
 function Scanner() {
@@ -32,63 +32,27 @@ function Scanner() {
     this.tokenBuffer = '';
 }
 
-Scanner.tokenTypeName = [
-    'ORIGIN', 'SCALE', 'ROT', 'IS', /** reserved keyword */
-    'TO', 'STEP', 'DRAW', 'FOR', 'FROM', /** reserved keyword */
-    'T', /** parameter */
-    'SEMICOLON', 'L_BRACKET', 'R_BRACKET', 'COMMA', /** separators */
-    'PLUS', 'MINUS', 'MUL', 'DIV', 'POWER', /** operators */
-    'FUNC', /** function (called) */
-    'CONST_ID', /** constant */
-    'NONTOKEN', /** empty notation (the end of a program) */
-    'ERRTOKEN' /** error notation (invalid input) */
-];
-
-/** @namespace Scanner.tokenType.ORIGIN */
-/** @namespace Scanner.tokenType.SCALE */
-/** @namespace Scanner.tokenType.ROT */
-/** @namespace Scanner.tokenType.IS */
-/** @namespace Scanner.tokenType.TO */
-/** @namespace Scanner.tokenType.STEP */
-/** @namespace Scanner.tokenType.DRAW */
-/** @namespace Scanner.tokenType.FOR */
-/** @namespace Scanner.tokenType.FROM */
-/** @namespace Scanner.tokenType.T */
-/** @namespace Scanner.tokenType.SEMICOLON */
-/** @namespace Scanner.tokenType.L_BRACKET */
-/** @namespace Scanner.tokenType.R_BRACKET */
-/** @namespace Scanner.tokenType.COMMA */
-/** @namespace Scanner.tokenType.PLUS */
-/** @namespace Scanner.tokenType.MINUS */
-/** @namespace Scanner.tokenType.MUL */
-/** @namespace Scanner.tokenType.DIV */
-/** @namespace Scanner.tokenType.POWER */
-/** @namespace Scanner.tokenType.FUNC */
-/** @namespace Scanner.tokenType.CONST_ID */
-/** @namespace Scanner.tokenType.NONTOKEN */
-/** @namespace Scanner.tokenType.ERRTOKEN */
-Scanner.tokenType = Util.enumerate(Scanner.tokenTypeName);
 
 Scanner.prototype.initTokenTab = function () {
     const tokenList = [
-        { type: Scanner.tokenType.CONST_ID, lexeme: 'PI', value: 3.1415926, callback: null },
-        { type: Scanner.tokenType.CONST_ID, lexeme: 'E', value: 2.71828, callback: null },
-        { type: Scanner.tokenType.T, lexeme: 'T', value: 0.0, callback: null },
-        { type: Scanner.tokenType.FUNC, lexeme: 'SIN', value: 0.0, callback: Math.sin },
-        { type: Scanner.tokenType.FUNC, lexeme: 'COS', value: 0.0, callback: Math.cos },
-        { type: Scanner.tokenType.FUNC, lexeme: 'TAN', value: 0.0, callback: Math.tan },
-        { type: Scanner.tokenType.FUNC, lexeme: 'LN', value: 0.0, callback: Math.log },
-        { type: Scanner.tokenType.FUNC, lexeme: 'EXP', value: 0.0, callback: Math.exp },
-        { type: Scanner.tokenType.FUNC, lexeme: 'SQRT', value: 0.0, callback: Math.sqrt },
-        { type: Scanner.tokenType.ORIGIN, lexeme: 'ORIGIN', value: 0.0, callback: null },
-        { type: Scanner.tokenType.SCALE, lexeme: 'SCALE', value: 0.0, callback: null },
-        { type: Scanner.tokenType.ROT, lexeme: 'ROT', value: 0.0, callback: null },
-        { type: Scanner.tokenType.IS, lexeme: 'IS', value: 0.0, callback: null },
-        { type: Scanner.tokenType.FOR, lexeme: 'FOR', value: 0.0, callback: null },
-        { type: Scanner.tokenType.FROM, lexeme: 'FROM', value: 0.0, callback: null },
-        { type: Scanner.tokenType.TO, lexeme: 'TO', value: 0.0, callback: null },
-        { type: Scanner.tokenType.STEP, lexeme: 'STEP', value: 0.0, callback: null },
-        { type: Scanner.tokenType.DRAW, lexeme: 'DRAW', value: 0.0, callback: null }
+        { type: TokenType.CONST_ID, lexeme: 'PI', value: 3.1415926, callback: null },
+        { type: TokenType.CONST_ID, lexeme: 'E', value: 2.71828, callback: null },
+        { type: TokenType.T, lexeme: 'T', value: 0.0, callback: null },
+        { type: TokenType.FUNC, lexeme: 'SIN', value: 0.0, callback: Math.sin },
+        { type: TokenType.FUNC, lexeme: 'COS', value: 0.0, callback: Math.cos },
+        { type: TokenType.FUNC, lexeme: 'TAN', value: 0.0, callback: Math.tan },
+        { type: TokenType.FUNC, lexeme: 'LN', value: 0.0, callback: Math.log },
+        { type: TokenType.FUNC, lexeme: 'EXP', value: 0.0, callback: Math.exp },
+        { type: TokenType.FUNC, lexeme: 'SQRT', value: 0.0, callback: Math.sqrt },
+        { type: TokenType.ORIGIN, lexeme: 'ORIGIN', value: 0.0, callback: null },
+        { type: TokenType.SCALE, lexeme: 'SCALE', value: 0.0, callback: null },
+        { type: TokenType.ROT, lexeme: 'ROT', value: 0.0, callback: null },
+        { type: TokenType.IS, lexeme: 'IS', value: 0.0, callback: null },
+        { type: TokenType.FOR, lexeme: 'FOR', value: 0.0, callback: null },
+        { type: TokenType.FROM, lexeme: 'FROM', value: 0.0, callback: null },
+        { type: TokenType.TO, lexeme: 'TO', value: 0.0, callback: null },
+        { type: TokenType.STEP, lexeme: 'STEP', value: 0.0, callback: null },
+        { type: TokenType.DRAW, lexeme: 'DRAW', value: 0.0, callback: null }
     ];
 
     for (let i = 0, len = tokenList.length; i < len; i++) {
@@ -150,7 +114,7 @@ Scanner.prototype.judgeKeyToken = function (idString) {
         }
     }
 
-    return new Token(Scanner.tokenType.ERRTOKEN, '', 0.0, null);
+    return new Token(TokenType.ERRTOKEN, '', 0.0, null);
 };
 
 Scanner.prototype.getToken = function () {
@@ -165,8 +129,8 @@ Scanner.prototype.getToken = function () {
     for (;;) {
         character = this.getChar();
 
-        if (character.charCodeAt(0) === 0) {
-            return new Token(Scanner.tokenType.NONTOKEN, '', 0.0, null);
+        if (character === '') {
+            return new Token(TokenType.NONTOKEN, '', 0.0, null);
         }
 
         if (character === '\r' || character === '\n') {
@@ -236,24 +200,24 @@ Scanner.prototype.getToken = function () {
 
         this.index--;
         str += this.tokenBuffer;
-        token = new Token(Scanner.tokenType.CONST_ID, parseFloat(str).toString(), parseFloat(str), null);
+        token = new Token(TokenType.CONST_ID, parseFloat(str).toString(), parseFloat(str), null);
         return token;
     } else {
         switch (character) {
-        case ':':
-            token = new Token(Scanner.tokenType.SEMICOLON, ':', 0.0, null);
+        case ';':
+            token = new Token(TokenType.SEMICOLON, ';', 0.0, null);
             break;
         case '(':
-            token = new Token(Scanner.tokenType.L_BRACKET, '(', 0.0, null);
+            token = new Token(TokenType.L_BRACKET, '(', 0.0, null);
             break;
         case ')':
-            token = new Token(Scanner.tokenType.R_BRACKET, ')', 0.0, null);
+            token = new Token(TokenType.R_BRACKET, ')', 0.0, null);
             break;
         case ',':
-            token = new Token(Scanner.tokenType.COMMA, ',', 0.0, null);
+            token = new Token(TokenType.COMMA, ',', 0.0, null);
             break;
         case '+':
-            token = new Token(Scanner.tokenType.PLUS, '+', 0.0, null);
+            token = new Token(TokenType.PLUS, '+', 0.0, null);
             break;
         case '-':
             character = this.getChar();
@@ -265,7 +229,7 @@ Scanner.prototype.getToken = function () {
             } else {
                 /** binary operations */
                 this.index--;
-                token = new Token(Scanner.tokenType.MINUS, '-', 0.0, null);
+                token = new Token(TokenType.MINUS, '-', 0.0, null);
                 break;
             }
         case '/':
@@ -278,22 +242,22 @@ Scanner.prototype.getToken = function () {
             } else {
                 /** binary operations */
                 this.index--;
-                token = new Token(Scanner.tokenType.DIV, '/', 0.0, null);
+                token = new Token(TokenType.DIV, '/', 0.0, null);
                 break;
             }
         case '*':
             character = this.getChar();
 
             if (character === '*') {
-                token = new Token(Scanner.tokenType.POWER, '^', 0.0, null);
+                token = new Token(TokenType.POWER, '^', 0.0, null);
             } else {
                 /** binary operations */
                 this.index--;
-                token = new Token(Scanner.tokenType.MUL, '*', 0.0, null);
+                token = new Token(TokenType.MUL, '*', 0.0, null);
             }
             break;
         default:
-            token = new Token(Scanner.tokenType.ERRTOKEN, '', 0.0, null);
+            token = new Token(TokenType.ERRTOKEN, '', 0.0, null);
             break;
         }
     }

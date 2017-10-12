@@ -14,9 +14,11 @@
  *  - Author: aleen42
  *  - Description: A parser module for parsing content
  *  - Create Time: May, 31st, 2017
- *  - Update Time: Oct, 12nd, 2017
+ *  - Update Time: Oct, 13rd, 2017
  *
  */
+
+import { TokenType, tokenTypeName } from 'compilers/common/tokenType';
 
 import Scanner from 'compilers/scanner/scanner';
 import Semantic from 'compilers/semantic/semantic';
@@ -98,25 +100,25 @@ Parser.prototype.printSyntaxTree = function (root, indent) {
     }
 
     switch (root.tokenType) {
-    case Scanner.tokenType.PLUS:
+    case TokenType.PLUS:
         console.log(`${info} +`);
         break;
-    case Scanner.tokenType.MINUS:
+    case TokenType.MINUS:
         console.log(`${info} -`);
         break;
-    case Scanner.tokenType.DIV:
+    case TokenType.DIV:
         console.log(`${info} /`);
         break;
-    case Scanner.tokenType.POWER:
+    case TokenType.POWER:
         console.log(`${info} **`);
         break;
-    case Scanner.tokenType.FUNC:
+    case TokenType.FUNC:
         console.log(`${info} ${root.content.caseFunc.mathFunc.name}`);
         break;
-    case Scanner.tokenType.CONST_ID:
+    case TokenType.CONST_ID:
         console.log(`${info} ${root.content.caseConst}`);
         break;
-    case Scanner.tokenType.T:
+    case TokenType.T:
         console.log(`${info} T`);
         break;
     default:
@@ -124,12 +126,12 @@ Parser.prototype.printSyntaxTree = function (root, indent) {
         return;
     }
 
-    if (root.tokenType === Scanner.tokenType.CONST_ID
-        || root.tokenType == Scanner.tokenType.T) {
+    if (root.tokenType === TokenType.CONST_ID
+        || root.tokenType === TokenType.T) {
         return;
     }
 
-    if (root.tokenType === Scanner.tokenType.FUNC) {
+    if (root.tokenType === TokenType.FUNC) {
         this.printSyntaxTree(root.content.caseFunc.childNode, indent + 1);
     } else {
         this.printSyntaxTree(root.content.caseFunc.leftNode, indent + 1);
@@ -169,7 +171,7 @@ Parser.prototype.syntaxError = function (description) {
 Parser.prototype.fetchToken = function () {
     this.token = this.scanner.getToken();
 
-    if (this.token.type === Scanner.tokenType.ERRTOKEN) {
+    if (this.token.type === TokenType.ERRTOKEN) {
         this.syntaxError('Wrong Token');
         this.errorLineNumber = this.scanner.lineNumber;
     }
@@ -188,14 +190,14 @@ Parser.prototype.makeExprNode = function (tokenType, leftNode, rightNode, funcPt
     const content = new Content();
     const node = new ExprNode(tokenType, content);
 
-    switch(tokenType) {
-    case Scanner.tokenType.CONST_ID:
+    switch (tokenType) {
+    case TokenType.CONST_ID:
         node.content.caseConst = parseFloat(leftNode);
         break;
-    case Scanner.tokenType.T:
+    case TokenType.T:
         node.content.caseParamPtr = this.parameter;
         break;
-    case Scanner.tokenType.FUNC:
+    case TokenType.FUNC:
         node.content.caseFunc.mathFunc = funcPtr;
         node.content.caseFunc.childNode = rightNode;
         break;
@@ -230,25 +232,25 @@ Parser.prototype.program = function () {
                             self.enter('atom');
 
                             switch (self.token.type) {
-                            case Scanner.tokenType.CONST_ID:
-                                self.matchToken(Scanner.tokenType.CONST_ID);
-                                addressNode = self.makeExprNode(Scanner.tokenType.CONST_ID, curToken.value, null, null);
+                            case TokenType.CONST_ID:
+                                self.matchToken(TokenType.CONST_ID, curToken.value);
+                                addressNode = self.makeExprNode(TokenType.CONST_ID, curToken.value, null, null);
                                 break;
-                            case Scanner.tokenType.T:
-                                self.matchToken(Scanner.tokenType.T);
-                                addressNode = self.makeExprNode(Scanner.tokenType.T, null, null, null);
+                            case TokenType.T:
+                                self.matchToken(TokenType.T);
+                                addressNode = self.makeExprNode(TokenType.T, null, null, null);
                                 break;
-                            case Scanner.tokenType.FUNC:
-                                self.matchToken(Scanner.tokenType.FUNC);
-                                self.matchToken(Scanner.tokenType.L_BRACKET);
-                                tempNode = expression.call(this);
-                                addressNode = self.makeExprNode(Scanner.tokenType.FUNC, null, tempNode, self.token.callback);
-                                self.matchToken(Scanner.tokenType.R_BRACKET);
+                            case TokenType.FUNC:
+                                self.matchToken(TokenType.FUNC);
+                                self.matchToken(TokenType.L_BRACKET);
+                                tempNode = expression.call(self);
+                                addressNode = self.makeExprNode(TokenType.FUNC, null, tempNode, curToken.callback);
+                                self.matchToken(TokenType.R_BRACKET);
                                 break;
-                            case Scanner.tokenType.L_BRACKET:
-                                self.matchToken(Scanner.tokenType.L_BRACKET);
-                                addressNode = expression.call(this);
-                                self.matchToken(Scanner.tokenType.R_BRACKET);
+                            case TokenType.L_BRACKET:
+                                self.matchToken(TokenType.L_BRACKET);
+                                addressNode = expression.call(self);
+                                self.matchToken(TokenType.R_BRACKET);
                                 break;
                             default:
                                 self.syntaxError('Unexpected Token');
@@ -264,11 +266,11 @@ Parser.prototype.program = function () {
 
                         self.enter('Component');
 
-                        leftNode = atom.call(this);
-                        if (self.token.type === Scanner.tokenType.POWER) {
-                            self.matchToken(Scanner.tokenType.POWER);
-                            rightNode = component.call(this);
-                            leftNode = self.makeExprNode(Scanner.tokenType.POWER, leftNode, rightNode, null);
+                        leftNode = atom.call(self);
+                        if (self.token.type === TokenType.POWER) {
+                            self.matchToken(TokenType.POWER);
+                            rightNode = component.call(self);
+                            leftNode = self.makeExprNode(TokenType.POWER, leftNode, rightNode, null);
                         }
 
                         self.back('Component');
@@ -280,19 +282,19 @@ Parser.prototype.program = function () {
 
                     self.enter('Factor');
 
-                    if (self.token.type === Scanner.tokenType.PLUS) {
-                        self.matchToken(Scanner.tokenType.PLUS);
-                        rightNode = factor.call(this);
-                    } else if (self.token.type === Scanner.tokenType.MINUS) {
-                        self.matchToken(Scanner.tokenType.MINUS);
-                        rightNode = factor.call(this);
+                    if (self.token.type === TokenType.PLUS) {
+                        self.matchToken(TokenType.PLUS);
+                        rightNode = factor.call(self);
+                    } else if (self.token.type === TokenType.MINUS) {
+                        self.matchToken(TokenType.MINUS);
+                        rightNode = factor.call(self);
 
                         const transparent = new Content();
                         transparent.caseConst = 0.0;
 
-                        leftNode = new ExprNode(Scanner.tokenType.CONST_ID, transparent);
+                        leftNode = new ExprNode(TokenType.CONST_ID, transparent);
 
-                        rightNode = self.makeExprNode(Scanner.tokenType.MINUS, leftNode, rightNode, null);
+                        rightNode = self.makeExprNode(TokenType.MINUS, leftNode, rightNode, null);
                     } else {
                         rightNode = component.call(this);
                     }
@@ -321,14 +323,14 @@ Parser.prototype.program = function () {
 
         let tempNode = new ExprNode();
 
-        switch(self.token.type) {
-        case Scanner.tokenType.ORIGIN:
+        switch (self.token.type) {
+        case TokenType.ORIGIN:
             /** Origin Statement */
             self.enter('Origin Statement');
 
-            self.matchToken(Scanner.tokenType.ORIGIN);
-            self.matchToken(Scanner.tokenType.IS);
-            self.matchToken(Scanner.tokenType.L_BRACKET);
+            self.matchToken(TokenType.ORIGIN);
+            self.matchToken(TokenType.IS);
+            self.matchToken(TokenType.L_BRACKET);
 
             tempNode = expression.call(this);
 
@@ -337,18 +339,18 @@ Parser.prototype.program = function () {
                 Semantic.deleteExpressionTree(tempNode);
             }
 
-            self.matchToken(Scanner.tokenType.R_BRACKET);
+            self.matchToken(TokenType.COMMA);
 
             self.back('Origin Statement');
 
             break;
-        case Scanner.tokenType.SCALE:
+        case TokenType.SCALE:
             /** Scale Statement */
             self.enter('Scale Statement');
 
-            self.matchToken(Scanner.tokenType.ORIGIN);
-            self.matchToken(Scanner.tokenType.IS);
-            self.matchToken(Scanner.tokenType.L_BRACKET);
+            self.matchToken(TokenType.SCALE);
+            self.matchToken(TokenType.IS);
+            self.matchToken(TokenType.L_BRACKET);
 
             tempNode = expression.call(this);
 
@@ -358,7 +360,7 @@ Parser.prototype.program = function () {
                 Semantic.deleteExpressionTree(tempNode);
             }
 
-            self.matchToken(Scanner.tokenType.COMMA);
+            self.matchToken(TokenType.COMMA);
 
             tempNode = expression.call(this);
 
@@ -368,16 +370,16 @@ Parser.prototype.program = function () {
                 Semantic.deleteExpressionTree(tempNode);
             }
 
-            self.matchToken(Scanner.tokenType.R_BRACKET);
+            self.matchToken(TokenType.R_BRACKET);
 
             self.back('Scale Statement');
             break;
-        case Scanner.tokenType.ROT:
+        case TokenType.ROT:
             /** Rotate Statement */
             self.enter('Rotate Statement');
 
-            self.matchToken(Scanner.tokenType.ROT);
-            self.matchToken(Scanner.tokenType.IS);
+            self.matchToken(TokenType.ROT);
+            self.matchToken(TokenType.IS);
 
             tempNode = expression.call(this);
 
@@ -389,7 +391,7 @@ Parser.prototype.program = function () {
 
             self.back('Rotate Statement');
             break;
-        case Scanner.tokenType.FOR:
+        case TokenType.FOR:
             /** Loop Statement */
             /** the start point to draw */
             let start = 0;
@@ -406,12 +408,9 @@ Parser.prototype.program = function () {
 
             self.enter('Loop Statement');
 
-            self.matchToken(Scanner.tokenType.FOR);
-            self.match('FOR');
-            self.matchToken(Scanner.tokenType.T);
-            self.match('T');
-            self.matchToken(Scanner.tokenType.FROM);
-            self.match('FROM');
+            self.matchToken(TokenType.FOR);
+            self.matchToken(TokenType.T);
+            self.matchToken(TokenType.FROM);
 
             /** calculate the value of start point to draw */
             startNode = expression.call(this);
@@ -421,8 +420,7 @@ Parser.prototype.program = function () {
                 Semantic.deleteExpressionTree(startNode);
             }
 
-            self.matchToken(Scanner.tokenType.TO);
-            self.match('TO');
+            self.matchToken(TokenType.TO);
 
             /** calculate the value of end point to draw */
             endNode = expression.call(this);
@@ -432,29 +430,24 @@ Parser.prototype.program = function () {
                 Semantic.deleteExpressionTree(endNode);
             }
 
-            self.matchToken(Scanner.tokenType.STEP);
             stepNode = expression().call(this);
+            self.matchToken(TokenType.STEP);
 
             if (!self.PARSE_DEBUG) {
                 step = Semantic.getExprssionValue(stepNode);
                 Semantic.deleteExpressionTree(stepNode);
             }
 
-            self.matchToken(Scanner.tokenType.DRAW);
-            self.match('DRAW');
-
-            self.matchToken(Scanner.tokenType.L_BRACKET);
-            self.match('(');
+            self.matchToken(TokenType.DRAW);
+            self.matchToken(TokenType.L_BRACKET);
 
             x = expression.call(this);
 
-            self.matchToken(Scanner.tokenType.COMMA);
-            self.match(',');
+            self.matchToken(TokenType.COMMA);
 
             y = expression.call(this);
 
-            self.matchToken(Scanner.tokenType.R_BRACKET);
-            self.match(')');
+            self.matchToken(TokenType.R_BRACKET);
 
             if (!self.PARSER_DEBUG) {
                 Semantic.DrawLoop(start, end, step, x, y);
@@ -476,7 +469,7 @@ Parser.prototype.program = function () {
     self.enter('Program');
 
     for (;;) {
-        if (self.token.type === Scanner.tokenType.NONTOKEN) {
+        if (self.token.type === TokenType.NONTOKEN) {
             break;
         }
 
@@ -484,7 +477,7 @@ Parser.prototype.program = function () {
             statement.call(this);
         }
 
-        self.matchToken(Scanner.tokenType.SEMICOLON)
+        self.matchToken(TokenType.SEMICOLON)
     }
 
     self.back('Program');
