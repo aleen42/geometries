@@ -211,7 +211,7 @@ Parser.prototype.makeExprNode = function (tokenType, leftNode, rightNode, funcPt
 };
 
 Parser.prototype.program = function () {
-    var self = this;
+    const self = this;
 
     /** Statement Recursive Function */
     function statement() {
@@ -296,7 +296,7 @@ Parser.prototype.program = function () {
 
                         rightNode = self.makeExprNode(TokenType.MINUS, leftNode, rightNode, null);
                     } else {
-                        rightNode = component.call(this);
+                        rightNode = component.call(self);
                     }
 
                     self.back('Factor');
@@ -305,7 +305,7 @@ Parser.prototype.program = function () {
 
                 self.enter('Term');
 
-                let leftNode = factor.call(this);
+                let leftNode = factor.call(self);
 
                 self.back('Term');
                 return leftNode;
@@ -313,7 +313,7 @@ Parser.prototype.program = function () {
 
             self.enter('Expression');
 
-            let leftNode = term.call(this);
+            let leftNode = term.call(self);
 
             self.back('Expression');
             return leftNode;
@@ -332,7 +332,7 @@ Parser.prototype.program = function () {
             self.matchToken(TokenType.IS);
             self.matchToken(TokenType.L_BRACKET);
 
-            tempNode = expression.call(this);
+            tempNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
                 self.originX = Semantic.getExprssionValue(tempNode);
@@ -352,7 +352,7 @@ Parser.prototype.program = function () {
             self.matchToken(TokenType.IS);
             self.matchToken(TokenType.L_BRACKET);
 
-            tempNode = expression.call(this);
+            tempNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
                 /** get the ratio factor of X axis */
@@ -362,7 +362,7 @@ Parser.prototype.program = function () {
 
             self.matchToken(TokenType.COMMA);
 
-            tempNode = expression.call(this);
+            tempNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
                 /** get the ratio factor of Y axis */
@@ -381,7 +381,7 @@ Parser.prototype.program = function () {
             self.matchToken(TokenType.ROT);
             self.matchToken(TokenType.IS);
 
-            tempNode = expression.call(this);
+            tempNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
                 /** get the rotate angle */
@@ -413,7 +413,7 @@ Parser.prototype.program = function () {
             self.matchToken(TokenType.FROM);
 
             /** calculate the value of start point to draw */
-            startNode = expression.call(this);
+            startNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
                 start = Semantic.getExprssionValue(startNode);
@@ -423,15 +423,15 @@ Parser.prototype.program = function () {
             self.matchToken(TokenType.TO);
 
             /** calculate the value of end point to draw */
-            endNode = expression.call(this);
+            endNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
                 end = Semantic.getExprssionValue(endNode);
                 Semantic.deleteExpressionTree(endNode);
             }
 
-            stepNode = expression().call(this);
             self.matchToken(TokenType.STEP);
+            stepNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
                 step = Semantic.getExprssionValue(stepNode);
@@ -441,11 +441,11 @@ Parser.prototype.program = function () {
             self.matchToken(TokenType.DRAW);
             self.matchToken(TokenType.L_BRACKET);
 
-            x = expression.call(this);
+            x = expression.call(self);
 
             self.matchToken(TokenType.COMMA);
 
-            y = expression.call(this);
+            y = expression.call(self);
 
             self.matchToken(TokenType.R_BRACKET);
 
@@ -474,7 +474,7 @@ Parser.prototype.program = function () {
         }
 
         if (self.scanner.lineNumber !== self.errorLineNumber) {
-            statement.call(this);
+            statement.call(self);
         }
 
         self.matchToken(TokenType.SEMICOLON)
