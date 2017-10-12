@@ -27,16 +27,40 @@ import ExprNode from 'compilers/parser/exprNode';
 import Content from 'compilers/parser/content';
 import Reference from 'compilers/parser/reference';
 
-function Parser(str) {
+/** @namespace options.debug */
+/** @namespace options.isDrawing */
+/** @namespace options.drawingCallback */
+/** @namespace options.resetDrawing */
+/** @namespace options.isSyntaxTreeShown */
+
+/**
+ * the string text you want to parser
+ * @param str
+ * @param [debug]
+ * @param [isSyntaxTreeShown]
+ * @param [isDrawing]
+ * @param [drawingCallback]
+ * @param [resetDrawing]
+ * @constructor
+ */
+function Parser(str, { debug = false, isSyntaxTreeShown = true, isDrawing = false, drawingCallback = () => {}, resetDrawing = () => {} } = {}) {
     /** a flag for setting debug process of the module, Parser */
-    this.PARSE_DEBUG = true;
+    this.PARSE_DEBUG = debug;
+
+    /** a flag for setting showing of syntax tree */
+    this.isSyntaxTreeShown = isSyntaxTreeShown;
+
+    /** a flag for setting drawing */
+    this.isDrawing = isDrawing;
+    this.drawCallback = drawingCallback;
+    this.resetDraw = resetDrawing;
 
     this.errorLineNumber = -1;
     this.indent = -1;
 
     this.parameter = new Reference();
 
-    // default value
+    /** default value */
     this.originX = 300;
     this.originY = 300;
     this.scaleX = 1;
@@ -82,12 +106,6 @@ Parser.prototype.back = function (str) {
 
         console.log(`${info} Exit from ${str}`);
         this.indent--;
-    }
-};
-
-Parser.prototype.match = function (str) {
-    if (this.PARSE_DEBUG) {
-        console.log(`Match token ${str}`)
     }
 };
 
@@ -140,12 +158,6 @@ Parser.prototype.printSyntaxTree = function (root, indent) {
     if (root.tokenType === TokenType.FUNC) {
         this.printSyntaxTree(root.content.caseFunc.childNode, indent + 1);
     } else {
-    }
-};
-
-Parser.prototype.traceTree = function (node) {
-    if (this.PARSE_DEBUG) {
-        this.printSyntaxTree(node, 1);
         this.printSyntaxTree(root.content.caseOperator.leftNode, indent + 1);
         this.printSyntaxTree(root.content.caseOperator.rightNode, indent + 1);
     }
@@ -183,10 +195,22 @@ Parser.prototype.fetchToken = function () {
     }
 };
 
-Parser.prototype.matchToken = function (tokenType) {
+Parser.prototype.matchToken = function (tokenType, value) {
+    value = value === void 0 ? '' : value;
+
     if (this.token.type !== tokenType) {
         this.syntaxError('Unexpected Token');
         this.errorLineNumber = this.scanner.lineNumber;
+    } else {
+        if (this.PARSE_DEBUG) {
+            let info = '';
+
+            for (let i = 1; i <= this.indent + 1; i++) {
+                info += '\t';
+            }
+
+            console.log(`${info} Match Token: ${tokenTypeName[tokenType]} (${value})`);
+        }
     }
 
     this.fetchToken();
@@ -222,7 +246,7 @@ Parser.prototype.program = function () {
     /** Statement Recursive Function */
     function statement() {
         /** Expression Recursive Function */
-        function expression () {
+        function expression() {
             /** Term Recursive Function */
             function term() {
                 /** Factor Recursive Function */
@@ -346,6 +370,10 @@ Parser.prototype.program = function () {
                 leftNode = self.makeExprNode(tempTokenType, leftNode, rightNode, null);
             }
 
+            if (this.isSyntaxTreeShown) {
+                this.printSyntaxTree(leftNode, 1);
+            }
+
             self.back('Expression');
             return leftNode;
         }
@@ -445,7 +473,7 @@ Parser.prototype.program = function () {
             let x;
             let y;
 
-            self.enter('Loop Statement');
+            self.enter('For Statement');
 
             self.matchToken(TokenType.FOR);
             self.matchToken(TokenType.T);
@@ -488,13 +516,13 @@ Parser.prototype.program = function () {
 
             self.matchToken(TokenType.R_BRACKET);
 
-            if (!self.PARSER_DEBUG) {
+            if (!self.isDrawing) {
                 self.semantic.drawLoop(start, end, step, x, y);
                 self.semantic.deleteExpressionTree(x);
                 self.semantic.deleteExpressionTree(y);
             }
 
-            self.back('Loop Statement');
+            self.back('For Statement');
             break;
         default:
             self.syntaxError('Unexpected Token');
