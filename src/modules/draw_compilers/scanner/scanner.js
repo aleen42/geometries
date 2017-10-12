@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: A scanner module for scanning validated content
  *  - Create Time: May, 30th, 2017
- *  - Update Time: Jun, 8th, 2017
+ *  - Update Time: Oct, 12nd, 2017
  *
  */
 
@@ -44,6 +44,29 @@ Scanner.tokenTypeName = [
     'ERRTOKEN' /** error notation (invalid input) */
 ];
 
+/** @namespace Scanner.tokenType.ORIGIN */
+/** @namespace Scanner.tokenType.SCALE */
+/** @namespace Scanner.tokenType.ROT */
+/** @namespace Scanner.tokenType.IS */
+/** @namespace Scanner.tokenType.TO */
+/** @namespace Scanner.tokenType.STEP */
+/** @namespace Scanner.tokenType.DRAW */
+/** @namespace Scanner.tokenType.FOR */
+/** @namespace Scanner.tokenType.FROM */
+/** @namespace Scanner.tokenType.T */
+/** @namespace Scanner.tokenType.SEMICOLON */
+/** @namespace Scanner.tokenType.L_BRACKET */
+/** @namespace Scanner.tokenType.R_BRACKET */
+/** @namespace Scanner.tokenType.COMMA */
+/** @namespace Scanner.tokenType.PLUS */
+/** @namespace Scanner.tokenType.MINUS */
+/** @namespace Scanner.tokenType.MUL */
+/** @namespace Scanner.tokenType.DIV */
+/** @namespace Scanner.tokenType.POWER */
+/** @namespace Scanner.tokenType.FUNC */
+/** @namespace Scanner.tokenType.CONST_ID */
+/** @namespace Scanner.tokenType.NONTOKEN */
+/** @namespace Scanner.tokenType.ERRTOKEN */
 Scanner.tokenType = Util.enumerate(Scanner.tokenTypeName);
 
 Scanner.prototype.initTokenTab = function () {
@@ -136,7 +159,7 @@ Scanner.prototype.getToken = function () {
     let character;
 
     this.emptyTokenString();
-    str += this.tokenBuffer.toUpperCase()
+    str += this.tokenBuffer.toUpperCase();
     token.lexeme = str;
 
     for (;;) {
