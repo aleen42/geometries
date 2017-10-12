@@ -52,12 +52,12 @@ function Parser(str) {
     this.scanner.initTokenTab();
     this.fetchToken();
     this.program();
-    this.scanner.close();
     this.back('Parser');
+    this.scanner.close();
 }
 
 Parser.prototype.enter = function (str) {
-    if (this.PARSE_DEBUG) {
+    if (this.PARSE_DEBUG && !this.scanner.isScannerClosed) {
         let info = '';
         this.indent++;
 
@@ -70,7 +70,7 @@ Parser.prototype.enter = function (str) {
 };
 
 Parser.prototype.back = function (str) {
-    if (this.PARSE_DEBUG) {
+    if (this.PARSE_DEBUG && !this.scanner.isScannerClosed) {
         let info = '';
 
         for (let i = 1; i <= this.indent; i++) {

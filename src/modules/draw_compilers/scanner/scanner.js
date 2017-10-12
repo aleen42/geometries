@@ -30,8 +30,10 @@ function Scanner() {
 
     this.tokenTabs = [];
     this.tokenBuffer = '';
-}
 
+    /** check whether the scanner is close */
+    this.isScannerClosed = false;
+}
 
 Scanner.prototype.initTokenTab = function () {
     const tokenList = [
@@ -73,6 +75,7 @@ Scanner.prototype.clearAll = function () {
 
 Scanner.prototype.close = function () {
     this.index = 0;
+    this.isScannerClosed = true;
 };
 
 Scanner.prototype.readInput = function (text) {
@@ -125,6 +128,11 @@ Scanner.prototype.getToken = function () {
     this.emptyTokenString();
     str += this.tokenBuffer.toUpperCase();
     token.lexeme = str;
+
+    if (this.isScannerClosed) {
+        /** return NONTOKEN to stop parser when it is closed with exeption */
+        return new Token(TokenType.NONTOKEN, '', 0.0, null);
+    }
 
     for (;;) {
         character = this.getChar();
