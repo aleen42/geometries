@@ -319,11 +319,11 @@ Parser.prototype.program = function () {
 
         self.enter('Statement');
 
+        let tempNode = new ExprNode();
+
         switch(self.token.type) {
         case Scanner.tokenType.ORIGIN:
             /** Origin Statement */
-            let tempNode = new ExprNode();
-
             self.enter('Origin Statement');
 
             self.matchToken(Scanner.tokenType.ORIGIN);
@@ -344,8 +344,6 @@ Parser.prototype.program = function () {
             break;
         case Scanner.tokenType.SCALE:
             /** Scale Statement */
-            let tempNode = new ExprNode();
-
             self.enter('Scale Statement');
 
             self.matchToken(Scanner.tokenType.ORIGIN);
@@ -376,8 +374,6 @@ Parser.prototype.program = function () {
             break;
         case Scanner.tokenType.ROT:
             /** Rotate Statement */
-            let tempNode = new ExprNode();
-
             self.enter('Rotate Statement');
 
             self.matchToken(Scanner.tokenType.ROT);
