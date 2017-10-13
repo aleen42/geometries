@@ -18,11 +18,13 @@
  *
  */
 
+import { TokenType, tokenTypeName } from 'compilers/common/tokenType';
 import Scanner from 'compilers/scanner/scanner';
 import Chai from 'chai';
 
 const should = Chai.should();
 
+/* global describe, it */
 describe('Unit tests for the module Scanner', () => {
     const scanner = new Scanner();
     scanner.initTokenTab();
@@ -30,19 +32,19 @@ describe('Unit tests for the module Scanner', () => {
     it('PI', () => {
         scanner.readInput(`PI`);
         const token = scanner.getToken();
-        console.log(`\ttype: ${Scanner.tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`);
-        `type: ${Scanner.tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`
-            .should
-            .equal('type: CONST_ID, lexeme: PI, value: 3.1415926');
+
+        const result = `type: ${tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`;
+        console.log(`\t${result}`);
+        result.should.equal('type: CONST_ID, lexeme: PI, value: 3.1415926');
     });
 
     it('ORIGIN', () => {
         scanner.readInput(`ORIGIN`);
         const token = scanner.getToken();
-        console.log(`\ttype: ${Scanner.tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`);
-        `type: ${Scanner.tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`
-            .should
-            .equal('type: ORIGIN, lexeme: ORIGIN, value: 0');
+
+        const result = `type: ${tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`;
+        console.log(`\t${result}`);
+        result.should.equal('type: ORIGIN, lexeme: ORIGIN, value: 0');
     });
 
     it('ORIGIN IS (380,140)', () => {
@@ -50,9 +52,8 @@ describe('Unit tests for the module Scanner', () => {
         scanner.getToken();
         const token = scanner.getToken();
 
-        console.log(`\ttype: ${Scanner.tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`);
-        `type: ${Scanner.tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`
-            .should
-            .equal('type: IS, lexeme: IS, value: 0');
+        const result = `type: ${tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`; 
+        console.log(`\t${result}`);
+        result.should.equal('type: IS, lexeme: IS, value: 0');
     });
 });
