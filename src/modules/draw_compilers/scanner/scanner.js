@@ -14,263 +14,225 @@
  *  - Author: aleen42
  *  - Description: A scanner module for scanning validated content
  *  - Create Time: May, 30th, 2017
- *  - Update Time: Oct, 12nd, 2017
+ *  - Update Time: Oct, 13rd, 2017
  *
  */
 
 import { TokenType } from 'compilers/common/tokenType';
 import Token from 'compilers/scanner/token';
 
-function Scanner() {
-    this.MAXSIZE = 10000; /** the max type of notations */
-    this.MAX_TOKEN_LEN = 100000; /** the max length of notations */
+class Scanner {
+    constructor() {
+        this.index = 0;
+        this.lineNumber = 0;
 
-    this.index = 0;
-    this.lineNumber = 0;
+        this.tokenTabs = [];
+        this.tokenBuffer = '';
 
-    this.tokenTabs = [];
-    this.tokenBuffer = '';
-
-    /** check whether the scanner is close */
-    this.isScannerClosed = false;
-}
-
-Scanner.prototype.initTokenTab = function () {
-    const tokenList = [
-        { type: TokenType.CONST_ID, lexeme: 'PI', value: 3.1415926, callback: null },
-        { type: TokenType.CONST_ID, lexeme: 'E', value: 2.71828, callback: null },
-        { type: TokenType.T, lexeme: 'T', value: 0.0, callback: null },
-        { type: TokenType.FUNC, lexeme: 'SIN', value: 0.0, callback: Math.sin },
-        { type: TokenType.FUNC, lexeme: 'COS', value: 0.0, callback: Math.cos },
-        { type: TokenType.FUNC, lexeme: 'TAN', value: 0.0, callback: Math.tan },
-        { type: TokenType.FUNC, lexeme: 'LN', value: 0.0, callback: Math.log },
-        { type: TokenType.FUNC, lexeme: 'EXP', value: 0.0, callback: Math.exp },
-        { type: TokenType.FUNC, lexeme: 'SQRT', value: 0.0, callback: Math.sqrt },
-        { type: TokenType.ORIGIN, lexeme: 'ORIGIN', value: 0.0, callback: null },
-        { type: TokenType.SCALE, lexeme: 'SCALE', value: 0.0, callback: null },
-        { type: TokenType.ROT, lexeme: 'ROT', value: 0.0, callback: null },
-        { type: TokenType.IS, lexeme: 'IS', value: 0.0, callback: null },
-        { type: TokenType.FOR, lexeme: 'FOR', value: 0.0, callback: null },
-        { type: TokenType.FROM, lexeme: 'FROM', value: 0.0, callback: null },
-        { type: TokenType.TO, lexeme: 'TO', value: 0.0, callback: null },
-        { type: TokenType.STEP, lexeme: 'STEP', value: 0.0, callback: null },
-        { type: TokenType.DRAW, lexeme: 'DRAW', value: 0.0, callback: null }
-    ];
-
-    for (let i = 0, len = tokenList.length; i < len; i++) {
-        this.tokenTabs.push(new Token(
-            tokenList[i].type,
-            tokenList[i].lexeme,
-            tokenList[i].value,
-            tokenList[i].callback
-        ));
-    }
-};
-
-Scanner.prototype.clearAll = function () {
-    this.index = 0;
-    this.lineNumber = 0;
-    this.tokenBuffer = '';
-};
-
-Scanner.prototype.close = function () {
-    this.index = 0;
-    this.isScannerClosed = true;
-};
-
-Scanner.prototype.readInput = function (text) {
-    if (text.length > this.MAX_TOKEN_LEN) {
-        return -1;
+        /** check whether the scanner is close */
+        this.isScannerClosed = false;
     }
 
-    /** clear all */
-    this.clearAll();
-    this.buffer = text;
-};
-
-Scanner.prototype.getChar = function () {
-    if (this.index === this.buffer.length) {
-        return '';
+    initTokenTab() {
+        [
+            { type: TokenType.CONST_ID, lexeme: 'PI', value: 3.1415926, callback: null },
+            { type: TokenType.CONST_ID, lexeme: 'E', value: 2.71828, callback: null },
+            { type: TokenType.T, lexeme: 'T', value: 0.0, callback: null },
+            { type: TokenType.FUNC, lexeme: 'SIN', value: 0.0, callback: Math.sin },
+            { type: TokenType.FUNC, lexeme: 'COS', value: 0.0, callback: Math.cos },
+            { type: TokenType.FUNC, lexeme: 'TAN', value: 0.0, callback: Math.tan },
+            { type: TokenType.FUNC, lexeme: 'LN', value: 0.0, callback: Math.log },
+            { type: TokenType.FUNC, lexeme: 'EXP', value: 0.0, callback: Math.exp },
+            { type: TokenType.FUNC, lexeme: 'SQRT', value: 0.0, callback: Math.sqrt },
+            { type: TokenType.ORIGIN, lexeme: 'ORIGIN', value: 0.0, callback: null },
+            { type: TokenType.SCALE, lexeme: 'SCALE', value: 0.0, callback: null },
+            { type: TokenType.ROT, lexeme: 'ROT', value: 0.0, callback: null },
+            { type: TokenType.IS, lexeme: 'IS', value: 0.0, callback: null },
+            { type: TokenType.FOR, lexeme: 'FOR', value: 0.0, callback: null },
+            { type: TokenType.FROM, lexeme: 'FROM', value: 0.0, callback: null },
+            { type: TokenType.TO, lexeme: 'TO', value: 0.0, callback: null },
+            { type: TokenType.STEP, lexeme: 'STEP', value: 0.0, callback: null },
+            { type: TokenType.DRAW, lexeme: 'DRAW', value: 0.0, callback: null }
+        ].map(item => {
+            this.tokenTabs.push(new Token(item.type, item.lexeme, item.value, item.callback));
+        });
     }
 
-    return this.buffer[this.index++];
-};
-
-Scanner.prototype.emptyTokenString = function () {
-    this.tokenBuffer = '';
-};
-
-Scanner.prototype.addCharTokenString = function (ch) {
-    if (this.tokenBuffer.length === this.MAX_TOKEN_LEN) {
-        return -1;
+    clearAll() {
+        this.index = 0;
+        this.lineNumber = 0;
+        this.tokenBuffer = '';
     }
 
-    this.tokenBuffer = this.tokenBuffer.concat(ch);
-};
-
-Scanner.prototype.judgeKeyToken = function (idString) {
-    const tokenTabs = this.tokenTabs;
-
-    for (let i = 0, len = tokenTabs.length; i < len; i++) {
-        if (tokenTabs[i].lexeme === idString) {
-            return tokenTabs[i];
-        }
+    close() {
+        this.index = 0;
+        this.isScannerClosed = true;
     }
 
-    return new Token(TokenType.ERRTOKEN, '', 0.0, null);
-};
-
-Scanner.prototype.getToken = function () {
-    let str = '';
-    let token = new Token();
-    let character;
-
-    this.emptyTokenString();
-    str += this.tokenBuffer.toUpperCase();
-    token.lexeme = str;
-
-    if (this.isScannerClosed) {
-        /** return NONTOKEN to stop parser when it is closed with exeption */
-        return new Token(TokenType.NONTOKEN, '', 0.0, null);
+    readInput(text) {
+        /** clear all */
+        this.clearAll();
+        this.buffer = text;
     }
 
-    for (;;) {
-        character = this.getChar();
+    getChar() {
+        return this.index === this.buffer.length ? '' : this.buffer[this.index++];
+    }
 
-        if (character === '') {
+    emptyTokenString() {
+        this.tokenBuffer = '';
+    }
+
+    addCharTokenString(ch) {
+        this.tokenBuffer = this.tokenBuffer.concat(ch);
+    }
+
+    judgeKeyToken(idString) {
+        const legalTokenTabs = this.tokenTabs.filter(item => item.lexeme === idString)[0];
+        return legalTokenTabs === void 0 ? new Token(TokenType.ERRTOKEN, '', 0.0, null) : legalTokenTabs;
+    }
+
+    getToken() {
+        if (this.isScannerClosed) {
+            /** return NONTOKEN to stop parser when it is closed with exeption */
             return new Token(TokenType.NONTOKEN, '', 0.0, null);
         }
 
-        if (character === '\r' || character === '\n') {
-            if (character === '\r') {
-                character = this.getChar();
-            }
+        let str = '';
+        let token = new Token();
+        let character;
 
-            this.lineNumber++;
-            continue;
-        }
+        this.emptyTokenString();
+        str += this.tokenBuffer.toUpperCase();
+        token.lexeme = str;
 
-        if (character === '\t') {
-            continue;
-        }
-
-        if (character !== ' ') {
-            break;
-        }
-    }
-
-    /**
-     * if the character is not an empty character, or a tab, an enter key,
-     * or even an EOF character, then push it into the tokenBuffer
-     */
-    this.addCharTokenString(character);
-
-    /** DFA */
-    if (/^[a-z]+$/i.test(character)) {
-        /** function, keyword, PI, E, etc. */
         for (;;) {
             character = this.getChar();
-            if (/^[a-z0-9]+$/i.test(character)) {
-                this.addCharTokenString(character);
-            } else {
+
+            if (character === '') {
+                return new Token(TokenType.NONTOKEN, '', 0.0, null);
+            }
+
+            if (character === '\r' || character === '\n') {
+                if (character === '\r') {
+                    character = this.getChar();
+                }
+
+                this.lineNumber++;
+                continue;
+            }
+
+            if (character === '\t') {
+                continue;
+            }
+
+            if (character !== ' ') {
                 break;
             }
         }
 
-        this.index--;
-        str += this.tokenBuffer;
+        /**
+         * if the character is not an empty character, or a tab, an enter key,
+         * or even an EOF character, then push it into the tokenBuffer
+         */
+        this.addCharTokenString(character);
 
-        token = this.judgeKeyToken(str.toUpperCase());
-        token.lexeme = str.toUpperCase();
-        return token;
-    } else if (/^\d+$/i.test(character)) {
-        for (;;) {
-            character = this.getChar();
-            if (/^\d+$/i.test(character)) {
-                this.addCharTokenString(character);
-            } else {
-                break;
-            }
-        }
-
-        if (character === '.') {
-            this.addCharTokenString(character);
-
+        /**
+         * try to match characters with regex and add them to the token buffer
+         * @param regex
+         */
+        const tryToMatch = regex => {
             for (;;) {
                 character = this.getChar();
-                if (/^\d+$/i.test(character)) {
-                    this.addCharTokenString(character);
-                } else {
+                if (!regex.test(character)) {
                     break;
                 }
+
+                this.addCharTokenString(character);
+            }
+        };
+
+        /**
+         * map operator character to token type
+         * @param character
+         * @returns {*}
+         */
+        const convertToTokenType = character => {
+            return {
+                ';': TokenType.SEMICOLON,
+                '(': TokenType.L_BRACKET,
+                ')': TokenType.R_BRACKET,
+                ',': TokenType.COMMA,
+                '+': TokenType.PLUS,
+                '-': TokenType.MINUS,
+                '/': TokenType.DIV
+            }[character]
+        };
+
+        /** DFA */
+        if (/^[a-z]+$/i.test(character)) {
+            /** function, keyword, PI, E, etc. */
+            tryToMatch(/^[a-z0-9]+$/i);
+            this.index--;
+            str += this.tokenBuffer;
+
+            token = this.judgeKeyToken(str.toUpperCase());
+            token.lexeme = str.toUpperCase();
+            return token;
+        } else if (/^\d+$/i.test(character)) {
+            tryToMatch(/^\d+$/i);
+            if (character === '.') {
+                this.addCharTokenString(character);
+                tryToMatch(/^\d+$/i);
+            }
+
+            this.index--;
+            str += this.tokenBuffer;
+            token = new Token(TokenType.CONST_ID, parseFloat(str).toString(), parseFloat(str), null);
+            return token;
+        } else {
+            switch (character) {
+            case ';':
+            case '(':
+            case ')':
+            case ',':
+            case '+':
+                token = new Token(convertToTokenType(character), character, 0.0, null);
+                break;
+            case '-':
+            case '/':
+                const previousCharacter = character;
+                character = this.getChar();
+
+                if (character === previousCharacter) {
+                    for (; character !== '\n' && character.charCodeAt(0) !== 0; character = this.getChar()) {}
+                    this.index--;
+                    return this.getToken(); /** call recursively */
+                } else {
+                    /** binary operations */
+                    this.index--;
+                    token = new Token(convertToTokenType(previousCharacter), previousCharacter, 0.0, null);
+                    break;
+                }
+            case '*':
+                character = this.getChar();
+
+                if (character === '*') {
+                    token = new Token(TokenType.POWER, '^', 0.0, null);
+                } else {
+                    /** binary operations */
+                    this.index--;
+                    token = new Token(TokenType.MUL, '*', 0.0, null);
+                }
+                break;
+            default:
+                token = new Token(TokenType.ERRTOKEN, '', 0.0, null);
+                break;
             }
         }
 
-        this.index--;
-        str += this.tokenBuffer;
-        token = new Token(TokenType.CONST_ID, parseFloat(str).toString(), parseFloat(str), null);
         return token;
-    } else {
-        switch (character) {
-        case ';':
-            token = new Token(TokenType.SEMICOLON, ';', 0.0, null);
-            break;
-        case '(':
-            token = new Token(TokenType.L_BRACKET, '(', 0.0, null);
-            break;
-        case ')':
-            token = new Token(TokenType.R_BRACKET, ')', 0.0, null);
-            break;
-        case ',':
-            token = new Token(TokenType.COMMA, ',', 0.0, null);
-            break;
-        case '+':
-            token = new Token(TokenType.PLUS, '+', 0.0, null);
-            break;
-        case '-':
-            character = this.getChar();
-
-            if (character === '-') {
-                for (; character !== '\n' && character.charCodeAt(0) !== 0; character = this.getChar()) {}
-                this.index--;
-                return this.getToken(); /** call recursively */
-            } else {
-                /** binary operations */
-                this.index--;
-                token = new Token(TokenType.MINUS, '-', 0.0, null);
-                break;
-            }
-        case '/':
-            character = this.getChar();
-
-            if (character === '/') {
-                for (; character !== '\n' && character.charCodeAt(0) !== 0; character = this.getChar()) {}
-                this.index--;
-                return this.getToken(); /** call recursively */
-            } else {
-                /** binary operations */
-                this.index--;
-                token = new Token(TokenType.DIV, '/', 0.0, null);
-                break;
-            }
-        case '*':
-            character = this.getChar();
-
-            if (character === '*') {
-                token = new Token(TokenType.POWER, '^', 0.0, null);
-            } else {
-                /** binary operations */
-                this.index--;
-                token = new Token(TokenType.MUL, '*', 0.0, null);
-            }
-            break;
-        default:
-            token = new Token(TokenType.ERRTOKEN, '', 0.0, null);
-            break;
-        }
     }
-
-    return token;
-};
+}
 
 export default Scanner;
