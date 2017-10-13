@@ -66,6 +66,7 @@ function Parser(str, { debug = false, isSyntaxTreeShown = true, isDrawing = fals
     this.scaleX = 1;
     this.scaleY = 1;
     this.rotateAngle = 0;
+    this.logStr = ''
 
     /** using scanner and semantic to complete parsing */
     this.scanner = new Scanner();
@@ -83,6 +84,14 @@ function Parser(str, { debug = false, isSyntaxTreeShown = true, isDrawing = fals
     this.scanner.close();
 }
 
+Parser.prototype.log = function (str) {
+    this.logStr += `\n${str}`;
+};
+
+Parser.prototype.outputLog = function () {
+    return this.logStr;
+};
+
 Parser.prototype.enter = function (str) {
     if (this.PARSE_DEBUG && !this.scanner.isScannerClosed) {
         let info = '';
@@ -92,7 +101,7 @@ Parser.prototype.enter = function (str) {
             info += '\t';
         }
 
-        console.log(`${info} Enter in ${str}`);
+        this.log(`${info} Enter in ${str}`);
     }
 };
 
@@ -104,7 +113,7 @@ Parser.prototype.back = function (str) {
             info += '\t';
         }
 
-        console.log(`${info} Exit from ${str}`);
+        this.log(`${info} Exit from ${str}`);
         this.indent--;
     }
 };
@@ -122,31 +131,31 @@ Parser.prototype.printSyntaxTree = function (root, indent) {
 
     switch (root.tokenType) {
     case TokenType.PLUS:
-        console.log(`${info} +`);
+        this.log(`${info} +`);
         break;
     case TokenType.MINUS:
-        console.log(`${info} -`);
+        this.log(`${info} -`);
         break;
     case TokenType.MUL:
-        console.log(`${info} *`);
+        this.log(`${info} *`);
         break;
     case TokenType.DIV:
-        console.log(`${info} /`);
+        this.log(`${info} /`);
         break;
     case TokenType.POWER:
-        console.log(`${info} **`);
+        this.log(`${info} **`);
         break;
     case TokenType.FUNC:
-        console.log(`${info} ${root.content.caseFunc.mathFunc.name}`);
+        this.log(`${info} ${root.content.caseFunc.mathFunc.name}`);
         break;
     case TokenType.CONST_ID:
-        console.log(`${info} ${root.content.caseConst}`);
+        this.log(`${info} ${root.content.caseConst}`);
         break;
     case TokenType.T:
-        console.log(`${info} T`);
+        this.log(`${info} T`);
         break;
     default:
-        console.log(`${info} Error Tree Node!`);
+        this.log(`${info} Error Tree Node!`);
         return;
     }
 
@@ -165,7 +174,7 @@ Parser.prototype.printSyntaxTree = function (root, indent) {
 
 Parser.prototype.errMsg = function (info, lineNumber, description, str) {
     if (this.PARSE_DEBUG) {
-        console.log(`${info} Line Number: ${lineNumber}: ${str} ${description}`)
+        this.log(`${info} Line Number: ${lineNumber}: ${str} ${description}`)
     }
 
     this.scanner.close();
@@ -209,7 +218,7 @@ Parser.prototype.matchToken = function (tokenType, value) {
                 info += '\t';
             }
 
-            console.log(`${info} Match Token: ${tokenTypeName[tokenType]} (${value})`);
+            this.log(`${info} Match Token: ${tokenTypeName[tokenType]} (${value})`);
         }
     }
 
