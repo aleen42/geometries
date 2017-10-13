@@ -15,14 +15,13 @@
  *  - Description: A util file for making some external functions
                    for helping
  *  - Create Time: May, 30th, 2017
- *  - Update Time: Jun, 8th, 2017
+ *  - Update Time: Oct, 13rd, 2017
  *
  *****************************************************************/
 
-function Util() {}
-
+const Util = {};
 Util.enumerate = arr => {
-    var returnObj = {};
+    const returnObj = {};
 
     arr.forEach((item, index) => {
         returnObj[item] = index;
