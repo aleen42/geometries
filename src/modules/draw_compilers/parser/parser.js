@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: A parser module for parsing content
  *  - Create Time: May, 31st, 2017
- *  - Update Time: Oct, 13rd, 2017
+ *  - Update Time: Oct, 27th, 2017
  *
  */
 
@@ -66,7 +66,7 @@ function Parser(str, { debug = false, isSyntaxTreeShown = true, isDrawing = fals
     this.scaleX = 1;
     this.scaleY = 1;
     this.rotateAngle = 0;
-    this.logStr = ''
+    this.logStr = '';
 
     /** using scanner and semantic to complete parsing */
     this.scanner = new Scanner();
@@ -205,7 +205,7 @@ Parser.prototype.fetchToken = function () {
 };
 
 Parser.prototype.matchToken = function (tokenType, value) {
-    value = value === void 0 ? '' : value;
+    value = value === void 0 ? this.token.lexeme : value;
 
     if (this.token.type !== tokenType) {
         this.syntaxError('Unexpected Token');

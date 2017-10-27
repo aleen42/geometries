@@ -14,46 +14,44 @@
  *  - Author: aleen42
  *  - Description: Unit tests for the module, Scanner.
  *  - Create Time: May, 30th, 2017
- *  - Update Time: May, 31st, 2017
+ *  - Update Time: Oct, 26th, 2017
  *
  */
 
 import { TokenType, tokenTypeName } from 'compilers/common/tokenType';
 import Scanner from 'compilers/scanner/scanner';
 import Chai from 'chai';
+import Color from 'util/color';
 
-const should = Chai.should();
+Chai.should();
 
 /* global describe, it */
-describe('Unit tests for the module Scanner', () => {
+describe(Color.wrapColor('GREEN', 'Unit tests for the module, Scanner'), () => {
     const scanner = new Scanner();
     scanner.initTokenTab();
 
-    it('PI', () => {
-        scanner.readInput(`PI`);
+    const checkResult = function (caseStr, expected) {
+        scanner.readInput(caseStr);
         const token = scanner.getToken();
 
         const result = `type: ${tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`;
-        console.log(`\t${result}`);
-        result.should.equal('type: CONST_ID, lexeme: PI, value: 3.1415926');
+        console.log(Color.wrapColor('YELLOW', `\n\t${result}\n`));
+        result.should.equal(expected);
+    };
+
+    it('PI', () => {
+        checkResult('PI', 'type: CONST_ID, lexeme: PI, value: 3.1415926');
     });
 
     it('ORIGIN', () => {
-        scanner.readInput(`ORIGIN`);
-        const token = scanner.getToken();
-
-        const result = `type: ${tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`;
-        console.log(`\t${result}`);
-        result.should.equal('type: ORIGIN, lexeme: ORIGIN, value: 0');
+        checkResult('ORIGIN', 'type: ORIGIN, lexeme: ORIGIN, value: 0');
     });
 
-    it('ORIGIN IS (380,140)', () => {
-        scanner.readInput(`ORIGIN IS (380,140);`);
-        scanner.getToken();
-        const token = scanner.getToken();
+    it('IS', () => {
+        checkResult('IS', 'type: IS, lexeme: IS, value: 0');
+    });
 
-        const result = `type: ${tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`; 
-        console.log(`\t${result}`);
-        result.should.equal('type: IS, lexeme: IS, value: 0');
+    it('COS', () => {
+        checkResult('COS', 'type: FUNC, lexeme: COS, value: 0');
     });
 });
