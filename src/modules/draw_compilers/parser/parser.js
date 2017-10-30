@@ -258,78 +258,103 @@ Parser.prototype.program = function () {
         function expression() {
             /** Term Recursive Function */
             function term() {
-                /** Component Recursive Function */
-                function component() {
-                    /** Atom Recursive Function */
-                    function atom() {
-                        let addressNode;
-                        let tempNode;
-                        let curToken = self.token;
+                /** Factor Recursive Function */
+                function factor() {
+                    /** Component Recursive Function */
+                    function component() {
+                        /** Atom Recursive Function */
+                        function atom() {
+                            let addressNode;
+                            let tempNode;
+                            let curToken = self.token;
 
-                        self.enter('Atom');
+                            self.enter('Atom');
 
-                        switch (self.token.type) {
-                        case TokenType.CONST_ID:
-                            self.matchToken(TokenType.CONST_ID, curToken.value);
-                            addressNode = self.makeExprNode(TokenType.CONST_ID, curToken.value, null, null);
-                            break;
-                        case TokenType.T:
-                            self.matchToken(TokenType.T);
-                            addressNode = self.makeExprNode(TokenType.T, null, null, null);
-                            break;
-                        case TokenType.FUNC:
-                            self.matchToken(TokenType.FUNC);
-                            self.matchToken(TokenType.L_BRACKET);
-                            tempNode = expression.call(self);
-                            addressNode = self.makeExprNode(TokenType.FUNC, null, tempNode, curToken.callback);
-                            self.matchToken(TokenType.R_BRACKET);
-                            break;
-                        case TokenType.L_BRACKET:
-                            self.matchToken(TokenType.L_BRACKET);
-                            addressNode = expression.call(self);
-                            self.matchToken(TokenType.R_BRACKET);
-                            break;
-                        default:
-                            self.syntaxError('Unexpected Token');
-                            return null;
+                            switch (self.token.type) {
+                            case TokenType.CONST_ID:
+                                self.matchToken(TokenType.CONST_ID, curToken.value);
+                                addressNode = self.makeExprNode(TokenType.CONST_ID, curToken.value, null, null);
+                                break;
+                            case TokenType.T:
+                                self.matchToken(TokenType.T);
+                                addressNode = self.makeExprNode(TokenType.T, null, null, null);
+                                break;
+                            case TokenType.FUNC:
+                                self.matchToken(TokenType.FUNC);
+                                self.matchToken(TokenType.L_BRACKET);
+                                tempNode = expression.call(self);
+                                addressNode = self.makeExprNode(TokenType.FUNC, null, tempNode, curToken.callback);
+                                self.matchToken(TokenType.R_BRACKET);
+                                break;
+                            case TokenType.L_BRACKET:
+                                self.matchToken(TokenType.L_BRACKET);
+                                addressNode = expression.call(self);
+                                self.matchToken(TokenType.R_BRACKET);
+                                break;
+                            default:
+                                self.syntaxError('Unexpected Token');
+                                return null;
+                            }
+
+                            self.back('Atom');
+                            return addressNode;
                         }
 
-                        self.back('Atom');
-                        return addressNode;
+                        let leftNode;
+                        let rightNode;
+
+                        self.enter('Component');
+
+                        if (self.token.type === TokenType.INCREMENT || self.token.type === TokenType.DECREMENT) {
+                            /** pre-increment or pre-decrement */
+                            self.matchToken(self.token.type);
+                            leftNode = self.makeExprNode(self.token.type, null, atom.call(self), null);
+                        } else {
+                            leftNode = atom.call(self);
+
+                            if (self.token.type === TokenType.INCREMENT || self.token.type === TokenType.DECREMENT) {
+                                /** post-increment or post-decrement */
+                                self.matchToken(self.token.type);
+                                leftNode = self.makeExprNode(self.token.type, leftNode, null, null);
+                            }
+
+                            if (self.token.type === TokenType.POWER) {
+                                self.matchToken(TokenType.POWER);
+                                rightNode = component.call(self);
+                                leftNode = self.makeExprNode(TokenType.POWER, leftNode, rightNode, null);
+                            }
+                        }
+
+                        self.back('Component');
+                        return leftNode;
                     }
+
+                    self.enter('Factor');
 
                     let leftNode;
                     let rightNode;
 
-                    self.enter('Component');
-
-                    if (self.token.type === TokenType.INCREMENT || self.token.type === TokenType.DECREMENT) {
-                        /** pre-increment or pre-decrement */
+                    if (self.token.type === TokenType.PLUS || self.token.type === TokenType.MINUS) {
+                        /** negative or positive value */
                         self.matchToken(self.token.type);
-                        leftNode = self.makeExprNode(self.token.type, null, atom.call(self), null);
+                        rightNode = factor.call(self);
+
+                        const transparent = new Content();
+                        transparent.caseConst = 0.0;
+
+                        leftNode = new ExprNode(TokenType.CONST_ID, transparent);
+                        rightNode = self.makeExprNode(self.token.type, leftNode, rightNode, null);
                     } else {
-                        leftNode = atom.call(self);
-
-                        if (self.token.type === TokenType.INCREMENT || self.token.type === TokenType.DECREMENT) {
-                            /** post-increment or post-decrement */
-                            self.matchToken(self.token.type);
-                            leftNode = self.makeExprNode(self.token.type, leftNode, null, null);
-                        }
-
-                        if (self.token.type === TokenType.POWER) {
-                            self.matchToken(TokenType.POWER);
-                            rightNode = component.call(self);
-                            leftNode = self.makeExprNode(TokenType.POWER, leftNode, rightNode, null);
-                        }
+                        rightNode = component.call(self);
                     }
 
-                    self.back('Component');
-                    return leftNode;
+                    self.back('Factor');
+                    return rightNode;
                 }
 
                 self.enter('Term');
 
-                let leftNode = component.call(self);
+                let leftNode = factor.call(self);
                 let rightNode;
 
                 for (;;) {
@@ -339,7 +364,7 @@ Parser.prototype.program = function () {
 
                     const tempTokenType = self.token.type;
                     self.matchToken(tempTokenType);
-                    rightNode = component.call(self);
+                    rightNode = factor.call(self);
                     leftNode = self.makeExprNode(tempTokenType, leftNode, rightNode, null);
                 }
 
