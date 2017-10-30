@@ -35,7 +35,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Scanner'), () => {
         const token = scanner.getToken();
 
         const result = `type: ${tokenTypeName[token.type]}, lexeme: ${token.lexeme}, value: ${token.value}`;
-        console.log(Color.wrapColor('YELLOW', `\n\t${result}\n`));
+        console.log(Color.wrapColor(tokenTypeName[token.type] === 'ERRTOKEN' ? 'RED' : 'YELLOW', `\n\t${result}\n`));
         result.should.equal(expected);
     };
 
@@ -53,5 +53,9 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Scanner'), () => {
 
     it('COS', () => {
         checkResult('COS', 'type: FUNC, lexeme: COS, value: 0');
+    });
+
+    it('NOT', () => {
+        checkResult('NOT', 'type: ERRTOKEN, lexeme: NOT, value: 0');
     });
 });
