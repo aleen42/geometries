@@ -28,7 +28,7 @@ To parse and understand such a language, we have to create a system containing t
 Scanner is the module which duty is to scan through the whole sentence and figure out which word is a legal lexeme, while which one is not. For instance, in such a brief language, when you tell the engine to use Scanner module to scan through your giving sentence: "ORIGIN IS NOT", the Scanner module will find out that `NOT` is not a legal lexeme in such a language, and throws out an error like this: `Line Number: 0: NOT Wrong Token`.
 
 <p align="center">
-    <img alt="scanner" src="./docs/scanner_wrong_token.jpg" width="80%" />
+    <img alt="scanner" src="./docs/scanner_wrong_token.jpg" />
 </p>
 <p align="center">
     <strong>Figure 1.1</strong> Wrong token
@@ -37,7 +37,7 @@ Scanner is the module which duty is to scan through the whole sentence and figur
 In order to have a unit testing of this module, I have also written some specification under corresponding folder, which is named with `scanner.spec.js`, and if you want to run this test, you can run the command `npm run test:scanner`. After that, the unit test framework will automatically run the script to test whether some words are legal, including `PI`, `ORIGIN`, `IS`, `COS`, and `NOT`:
 
 <p align="center">
-    <img alt="scanner_test" src="./docs/scanner_test.jpg" width="80%" />
+    <img alt="scanner_test" src="./docs/scanner_test.jpg" />
 </p>
 <p align="center">
     <strong>Figure 1.2</strong> Unit test for the Scanner module 
@@ -50,7 +50,7 @@ Parser is another module to analyze whether a given sentence is meaningful and u
 How can it understand a sentence with specific grammar? It relies on a series of recursive calling, in which there should be some phases. Different phases are used to recognize different words in the sentence. Take "ORIGIN IS (2 * -(-25), 50);" as an example, the Parser module will firstly enter **Statement Phase**, and recognize that this sentence is a statement for specify *ORIGIN* as it is given by the first word. If the module is given *IS*, it cannot recognize any statement for this word at all, so it should throw out an error to tell you this is an unexpected word.
 
 <p align="center">
-    <img alt="unexpected token" src="./docs/unexpected_token.jpg" width="80%" />
+    <img alt="unexpected token" src="./docs/unexpected_token.jpg" />
 </p>
 <p align="center">
     <strong>Figure 2.1</strong> <i>IS</i> is not an expected word 
@@ -72,7 +72,7 @@ console.log(new Parser('ORIGIN IS (2 * -(-25), 50);', {
 As shown in the snippet above, we can see that if we want to use the `outputLog` method after creating an `Parser` instance, we need to parse `true` value to the option `debug`. By running the code:
 
 <p align="center">
-    <img alt="parser_result" src="./docs/parser_result.jpg" width="80%" />
+    <img alt="parser_result" src="./docs/parser_result.jpg" />
 </p>
 <p align="center">
     <strong>Figure 2.2</strong> The log of parsing
@@ -81,7 +81,7 @@ As shown in the snippet above, we can see that if we want to use the `outputLog`
 To make it more colorful, you can implement another showing way like what the method `showColorfulResult()` does in `parser.spec.js`:
 
 <p align="center">
-    <img alt="parser_result_with_color" src="./docs/parser_result_with_color.jpg" width="80%" />
+    <img alt="parser_result_with_color" src="./docs/parser_result_with_color.jpg" />
 </p>
 <p align="center">
     <strong>Figure 2.2</strong> The colorful log of parsing
