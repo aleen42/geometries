@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: A parser module for parsing content
  *  - Create Time: May, 31st, 2017
- *  - Update Time: Oct, 27th, 2017
+ *  - Update Time: Oct, 30th, 2017
  *
  */
 
@@ -258,93 +258,78 @@ Parser.prototype.program = function () {
         function expression() {
             /** Term Recursive Function */
             function term() {
-                /** Factor Recursive Function */
-                function factor() {
-                    /** Component Recursive Function */
-                    function component() {
-                        /** Atom Recursive Function */
-                        function atom() {
-                            let addressNode;
-                            let tempNode;
-                            let curToken = self.token;
+                /** Component Recursive Function */
+                function component() {
+                    /** Atom Recursive Function */
+                    function atom() {
+                        let addressNode;
+                        let tempNode;
+                        let curToken = self.token;
 
-                            self.enter('atom');
+                        self.enter('atom');
 
-                            switch (self.token.type) {
-                            case TokenType.CONST_ID:
-                                self.matchToken(TokenType.CONST_ID, curToken.value);
-                                addressNode = self.makeExprNode(TokenType.CONST_ID, curToken.value, null, null);
-                                break;
-                            case TokenType.T:
-                                self.matchToken(TokenType.T);
-                                addressNode = self.makeExprNode(TokenType.T, null, null, null);
-                                break;
-                            case TokenType.FUNC:
-                                self.matchToken(TokenType.FUNC);
-                                self.matchToken(TokenType.L_BRACKET);
-                                tempNode = expression.call(self);
-                                addressNode = self.makeExprNode(TokenType.FUNC, null, tempNode, curToken.callback);
-                                self.matchToken(TokenType.R_BRACKET);
-                                break;
-                            case TokenType.L_BRACKET:
-                                self.matchToken(TokenType.L_BRACKET);
-                                addressNode = expression.call(self);
-                                self.matchToken(TokenType.R_BRACKET);
-                                break;
-                            default:
-                                self.syntaxError('Unexpected Token');
-                                return null;
-                            }
-
-                            self.back('atom');
-                            return addressNode;
+                        switch (self.token.type) {
+                        case TokenType.CONST_ID:
+                            self.matchToken(TokenType.CONST_ID, curToken.value);
+                            addressNode = self.makeExprNode(TokenType.CONST_ID, curToken.value, null, null);
+                            break;
+                        case TokenType.T:
+                            self.matchToken(TokenType.T);
+                            addressNode = self.makeExprNode(TokenType.T, null, null, null);
+                            break;
+                        case TokenType.FUNC:
+                            self.matchToken(TokenType.FUNC);
+                            self.matchToken(TokenType.L_BRACKET);
+                            tempNode = expression.call(self);
+                            addressNode = self.makeExprNode(TokenType.FUNC, null, tempNode, curToken.callback);
+                            self.matchToken(TokenType.R_BRACKET);
+                            break;
+                        case TokenType.L_BRACKET:
+                            self.matchToken(TokenType.L_BRACKET);
+                            addressNode = expression.call(self);
+                            self.matchToken(TokenType.R_BRACKET);
+                            break;
+                        default:
+                            self.syntaxError('Unexpected Token');
+                            return null;
                         }
 
-                        let leftNode;
-                        let rightNode;
-
-                        self.enter('Component');
-
-                        leftNode = atom.call(self);
-                        if (self.token.type === TokenType.POWER) {
-                            self.matchToken(TokenType.POWER);
-                            rightNode = component.call(self);
-                            leftNode = self.makeExprNode(TokenType.POWER, leftNode, rightNode, null);
-                        }
-
-                        self.back('Component');
-                        return leftNode;
+                        self.back('atom');
+                        return addressNode;
                     }
 
                     let leftNode;
                     let rightNode;
 
-                    self.enter('Factor');
+                    self.enter('Component');
 
-                    if (self.token.type === TokenType.PLUS) {
-                        self.matchToken(TokenType.PLUS);
-                        rightNode = factor.call(self);
-                    } else if (self.token.type === TokenType.MINUS) {
-                        self.matchToken(TokenType.MINUS);
-                        rightNode = factor.call(self);
-
-                        const transparent = new Content();
-                        transparent.caseConst = 0.0;
-
-                        leftNode = new ExprNode(TokenType.CONST_ID, transparent);
-
-                        rightNode = self.makeExprNode(TokenType.MINUS, leftNode, rightNode, null);
+                    if (self.token.type === TokenType.INCREMENT || self.token.type === TokenType.DECREMENT) {
+                        /** pre-increment or pre-decrement */
+                        self.matchToken(self.token.type);
+                        leftNode = self.makeExprNode(self.token.type, null, atom.call(self), null);
                     } else {
-                        rightNode = component.call(self);
+                        leftNode = atom.call(self);
+
+                        if (self.token.type === TokenType.INCREMENT || self.token.type === TokenType.DECREMENT) {
+                            /** post-increment or post-decrement */
+                            self.matchToken(self.token.type);
+                            leftNode = self.makeExprNode(self.token.type, leftNode, null, null);
+                        }
+
+                        if (self.token.type === TokenType.POWER) {
+                            self.matchToken(TokenType.POWER);
+                            rightNode = component.call(self);
+                            leftNode = self.makeExprNode(TokenType.POWER, leftNode, rightNode, null);
+                        }
                     }
 
-                    self.back('Factor');
-                    return rightNode;
+                    self.back('Component');
+                    return leftNode;
                 }
 
                 self.enter('Term');
 
-                let leftNode = factor.call(self);
+                let leftNode = component.call(self);
                 let rightNode;
 
                 for (;;) {
@@ -354,7 +339,7 @@ Parser.prototype.program = function () {
 
                     const tempTokenType = self.token.type;
                     self.matchToken(tempTokenType);
-                    rightNode = factor.call(self);
+                    rightNode = component.call(self);
                     leftNode = self.makeExprNode(tempTokenType, leftNode, rightNode, null);
                 }
 

@@ -29,7 +29,9 @@ const tokenTypeName = [
     'FUNC', /** function (called) */
     'CONST_ID', /** constant */
     'NONTOKEN', /** empty notation (the end of a program) */
-    'ERRTOKEN' /** error notation (invalid input) */
+    'ERRTOKEN', /** error notation (invalid input) */
+    'INCREMENT', /** ++ operator */
+    'DECREMENT' /** -- operator */
 ];
 
 /** @namespace TokenType.ORIGIN        0 */
@@ -55,5 +57,7 @@ const tokenTypeName = [
 /** @namespace TokenType.CONST_ID     20 */
 /** @namespace TokenType.NONTOKEN     21 */
 /** @namespace TokenType.ERRTOKEN     22 */
+/** @namespace TokenType.INCREMENT    23 */
+/** @namespace TokenType.DECREMENT    24 */
 const TokenType = Util.enumerate(tokenTypeName);
 export { TokenType, tokenTypeName };

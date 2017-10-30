@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: Unit tests for the module, Scanner.
  *  - Create Time: Oct, 12nd, 2017
- *  - Update Time: Oct, 27th, 2017
+ *  - Update Time: Oct, 30th, 2017
  *
  */
 
@@ -44,7 +44,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                 result.replace(/\n ([a-z])/gi, `\n${indent}+-- $1`)
                     .replace(/\n\t/g, `\n${indent}\t\t`)
                     .replace(/\t/g, '| ')
-                    .replace(/\|  ([a-z])/gi, '+-- $1')
+                    .replace(/\| {2}([a-z])/gi, '+-- $1')
             }\n`).replace(/(\| *.*)?Match Token: ([_A-Z]+) \((.+)\)\n/gi, (whole, prefix, type, lexeme) => {
                 let tempLexeme = lexeme;
                 tempLexeme = tempLexeme === '3.1415926' ? 'PI' : tempLexeme;
@@ -82,25 +82,21 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                             Match Token: L_BRACKET (()
                             Enter in Expression
                                 Enter in Term
-                                    Enter in Factor
-                                        Enter in Component
-                                            Enter in atom
-                                                Match Token: CONST_ID (380)
-                                            Exit from atom
-                                        Exit from Component
-                                    Exit from Factor
+                                    Enter in Component
+                                        Enter in atom
+                                            Match Token: CONST_ID (380)
+                                        Exit from atom
+                                    Exit from Component
                                 Exit from Term
                             Exit from Expression
                             Match Token: COMMA (,)
                                 Enter in Expression
                                     Enter in Term
-                                        Enter in Factor
-                                            Enter in Component
-                                                Enter in atom
-                                                    Match Token: CONST_ID (140)
-                                                Exit from atom
-                                            Exit from Component
-                                        Exit from Factor
+                                        Enter in Component
+                                            Enter in atom
+                                                Match Token: CONST_ID (140)
+                                            Exit from atom
+                                        Exit from Component
                                     Exit from Term
                                 Exit from Expression
                             Match Token: R_BRACKET ())
@@ -123,422 +119,336 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                         Match Token: FROM (FROM)
                         Enter in Expression
                             Enter in Term
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: CONST_ID (0)
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: CONST_ID (0)
+                                    Exit from atom
+                                Exit from Component
                             Exit from Term
                         Exit from Expression
                         Match Token: TO (TO)
                         Enter in Expression
                             Enter in Term
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: CONST_ID (2)
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: CONST_ID (2)
+                                    Exit from atom
+                                Exit from Component
                                 Match Token: MUL (*)
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: CONST_ID (3.1415926)
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: CONST_ID (3.1415926)
+                                    Exit from atom
+                                Exit from Component
                             Exit from Term
                         Exit from Expression
                         Match Token: STEP (STEP)
                         Enter in Expression
                             Enter in Term
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: CONST_ID (3.1415926)
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: CONST_ID (3.1415926)
+                                    Exit from atom
+                                Exit from Component
                                 Match Token: DIV (/)
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: CONST_ID (100)
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: CONST_ID (100)
+                                    Exit from atom
+                                Exit from Component
                             Exit from Term
                         Exit from Expression
                         Match Token: DRAW (DRAW)
                         Match Token: L_BRACKET (()
                         Enter in Expression
                             Enter in Term
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: L_BRACKET (()
-                                            Enter in Expression
-                                                Enter in Term
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: CONST_ID (5)
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                Exit from Term
-                                                Match Token: MINUS (-)
-                                                Enter in Term
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: CONST_ID (7)
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                Exit from Term
-                                            Exit from Expression
-                                            Match Token: R_BRACKET ())
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: L_BRACKET (()
+                                        Enter in Expression
+                                            Enter in Term
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: CONST_ID (5)
+                                                    Exit from atom
+                                                Exit from Component
+                                            Exit from Term
+                                            Match Token: MINUS (-)
+                                            Enter in Term
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: CONST_ID (7)
+                                                    Exit from atom
+                                                Exit from Component
+                                            Exit from Term
+                                        Exit from Expression
+                                        Match Token: R_BRACKET ())
+                                    Exit from atom
+                                Exit from Component
                                 Match Token: MUL (*)
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: FUNC (COS)
-                                            Match Token: L_BRACKET (()
-                                            Enter in Expression
-                                                Enter in Term
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: CONST_ID (2)
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                    Match Token: MUL (*)
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: CONST_ID (3.1415926)
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                    Match Token: MUL (*)
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: CONST_ID (10)
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                    Match Token: MUL (*)
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: T (T)
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                Exit from Term
-                                            Exit from Expression
-                                            Match Token: R_BRACKET ())
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: FUNC (COS)
+                                        Match Token: L_BRACKET (()
+                                        Enter in Expression
+                                            Enter in Term
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: CONST_ID (2)
+                                                    Exit from atom
+                                                Exit from Component
+                                                Match Token: MUL (*)
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: CONST_ID (3.1415926)
+                                                    Exit from atom
+                                                Exit from Component
+                                                Match Token: MUL (*)
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: CONST_ID (10)
+                                                    Exit from atom
+                                                Exit from Component
+                                                Match Token: MUL (*)
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: T (T)
+                                                    Exit from atom
+                                                Exit from Component
+                                            Exit from Term
+                                        Exit from Expression
+                                        Match Token: R_BRACKET ())
+                                    Exit from atom
+                                Exit from Component
                             Exit from Term
                             Match Token: PLUS (+)
                             Enter in Term
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: CONST_ID (2.2)
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: CONST_ID (2.2)
+                                    Exit from atom
+                                Exit from Component
                                 Match Token: MUL (*)
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: FUNC (COS)
-                                            Match Token: L_BRACKET (()
-                                            Enter in Expression
-                                                Enter in Term
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: L_BRACKET (()
-                                                                Enter in Expression
-                                                                    Enter in Term
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: CONST_ID (5)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                        Match Token: DIV (/)
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: CONST_ID (7)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                    Exit from Term
-                                                                    Match Token: MINUS (-)
-                                                                    Enter in Term
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: CONST_ID (1)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                    Exit from Term
-                                                                Exit from Expression
-                                                                Match Token: R_BRACKET ())
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                    Match Token: MUL (*)
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: L_BRACKET (()
-                                                                Enter in Expression
-                                                                    Enter in Term
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: CONST_ID (2)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                        Match Token: MUL (*)
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: CONST_ID (3.1415926)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                        Match Token: MUL (*)
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: CONST_ID (10)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                        Match Token: MUL (*)
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: T (T)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                    Exit from Term
-                                                                Exit from Expression
-                                                                Match Token: R_BRACKET ())
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                Exit from Term
-                                            Exit from Expression
-                                            Match Token: R_BRACKET ())
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: FUNC (COS)
+                                        Match Token: L_BRACKET (()
+                                        Enter in Expression
+                                            Enter in Term
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: L_BRACKET (()
+                                                        Enter in Expression
+                                                            Enter in Term
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: CONST_ID (5)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                                Match Token: DIV (/)
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: CONST_ID (7)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                            Exit from Term
+                                                            Match Token: MINUS (-)
+                                                            Enter in Term
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: CONST_ID (1)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                            Exit from Term
+                                                        Exit from Expression
+                                                        Match Token: R_BRACKET ())
+                                                    Exit from atom
+                                                Exit from Component
+                                                Match Token: MUL (*)
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: L_BRACKET (()
+                                                        Enter in Expression
+                                                            Enter in Term
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: CONST_ID (2)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                                Match Token: MUL (*)
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: CONST_ID (3.1415926)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                                Match Token: MUL (*)
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: CONST_ID (10)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                                Match Token: MUL (*)
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: T (T)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                            Exit from Term
+                                                        Exit from Expression
+                                                        Match Token: R_BRACKET ())
+                                                    Exit from atom
+                                                Exit from Component
+                                            Exit from Term
+                                        Exit from Expression
+                                        Match Token: R_BRACKET ())
+                                    Exit from atom
+                                Exit from Component
                             Exit from Term
                         Exit from Expression
                         Match Token: COMMA (,)
                         Enter in Expression
                             Enter in Term
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: L_BRACKET (()
-                                            Enter in Expression
-                                                Enter in Term
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: CONST_ID (5)
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                Exit from Term
-                                                Match Token: MINUS (-)
-                                                Enter in Term
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: CONST_ID (7)
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                Exit from Term
-                                            Exit from Expression
-                                            Match Token: R_BRACKET ())
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: L_BRACKET (()
+                                        Enter in Expression
+                                            Enter in Term
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: CONST_ID (5)
+                                                    Exit from atom
+                                                Exit from Component
+                                            Exit from Term
+                                            Match Token: MINUS (-)
+                                            Enter in Term
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: CONST_ID (7)
+                                                    Exit from atom
+                                                Exit from Component
+                                            Exit from Term
+                                        Exit from Expression
+                                        Match Token: R_BRACKET ())
+                                    Exit from atom
+                                Exit from Component
                                 Match Token: MUL (*)
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: FUNC (SIN)
-                                            Match Token: L_BRACKET (()
-                                            Enter in Expression
-                                                Enter in Term
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: CONST_ID (2)
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                    Match Token: MUL (*)
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: CONST_ID (3.1415926)
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                    Match Token: MUL (*)
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: CONST_ID (10)
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                    Match Token: MUL (*)
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: T (T)
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                Exit from Term
-                                            Exit from Expression
-                                            Match Token: R_BRACKET ())
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: FUNC (SIN)
+                                        Match Token: L_BRACKET (()
+                                        Enter in Expression
+                                            Enter in Term
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: CONST_ID (2)
+                                                    Exit from atom
+                                                Exit from Component
+                                                Match Token: MUL (*)
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: CONST_ID (3.1415926)
+                                                    Exit from atom
+                                                Exit from Component
+                                                Match Token: MUL (*)
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: CONST_ID (10)
+                                                    Exit from atom
+                                                Exit from Component
+                                                Match Token: MUL (*)
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: T (T)
+                                                    Exit from atom
+                                                Exit from Component
+                                            Exit from Term
+                                        Exit from Expression
+                                        Match Token: R_BRACKET ())
+                                    Exit from atom
+                                Exit from Component
                             Exit from Term
                             Match Token: MINUS (-)
                             Enter in Term
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: CONST_ID (2.2)
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: CONST_ID (2.2)
+                                    Exit from atom
+                                Exit from Component
                                 Match Token: MUL (*)
-                                Enter in Factor
-                                    Enter in Component
-                                        Enter in atom
-                                            Match Token: FUNC (SIN)
-                                            Match Token: L_BRACKET (()
-                                            Enter in Expression
-                                                Enter in Term
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: L_BRACKET (()
-                                                                Enter in Expression
-                                                                    Enter in Term
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: CONST_ID (5)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                        Match Token: DIV (/)
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: CONST_ID (7)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                    Exit from Term
-                                                                    Match Token: MINUS (-)
-                                                                    Enter in Term
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: CONST_ID (1)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                    Exit from Term
-                                                                Exit from Expression
-                                                                Match Token: R_BRACKET ())
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                    Match Token: MUL (*)
-                                                    Enter in Factor
-                                                        Enter in Component
-                                                            Enter in atom
-                                                                Match Token: L_BRACKET (()
-                                                                Enter in Expression
-                                                                    Enter in Term
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: CONST_ID (2)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                        Match Token: MUL (*)
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: CONST_ID (3.1415926)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                        Match Token: MUL (*)
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: CONST_ID (10)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                        Match Token: MUL (*)
-                                                                        Enter in Factor
-                                                                            Enter in Component
-                                                                                Enter in atom
-                                                                                    Match Token: T (T)
-                                                                                Exit from atom
-                                                                            Exit from Component
-                                                                        Exit from Factor
-                                                                    Exit from Term
-                                                                Exit from Expression
-                                                                Match Token: R_BRACKET ())
-                                                            Exit from atom
-                                                        Exit from Component
-                                                    Exit from Factor
-                                                Exit from Term
-                                            Exit from Expression
-                                            Match Token: R_BRACKET ())
-                                        Exit from atom
-                                    Exit from Component
-                                Exit from Factor
+                                Enter in Component
+                                    Enter in atom
+                                        Match Token: FUNC (SIN)
+                                        Match Token: L_BRACKET (()
+                                        Enter in Expression
+                                            Enter in Term
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: L_BRACKET (()
+                                                        Enter in Expression
+                                                            Enter in Term
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: CONST_ID (5)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                                Match Token: DIV (/)
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: CONST_ID (7)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                            Exit from Term
+                                                            Match Token: MINUS (-)
+                                                            Enter in Term
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: CONST_ID (1)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                            Exit from Term
+                                                        Exit from Expression
+                                                        Match Token: R_BRACKET ())
+                                                    Exit from atom
+                                                Exit from Component
+                                                Match Token: MUL (*)
+                                                Enter in Component
+                                                    Enter in atom
+                                                        Match Token: L_BRACKET (()
+                                                        Enter in Expression
+                                                            Enter in Term
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: CONST_ID (2)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                                Match Token: MUL (*)
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: CONST_ID (3.1415926)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                                Match Token: MUL (*)
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: CONST_ID (10)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                                Match Token: MUL (*)
+                                                                Enter in Component
+                                                                    Enter in atom
+                                                                        Match Token: T (T)
+                                                                    Exit from atom
+                                                                Exit from Component
+                                                            Exit from Term
+                                                        Exit from Expression
+                                                        Match Token: R_BRACKET ())
+                                                    Exit from atom
+                                                Exit from Component
+                                            Exit from Term
+                                        Exit from Expression
+                                        Match Token: R_BRACKET ())
+                                    Exit from atom
+                                Exit from Component
                             Exit from Term
                         Exit from Expression
                         Match Token: R_BRACKET ())

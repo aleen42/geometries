@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: A scanner module for scanning validated content
  *  - Create Time: May, 30th, 2017
- *  - Update Time: Oct, 13rd, 2017
+ *  - Update Time: Oct, 30th, 2017
  *
  */
 
@@ -165,7 +165,11 @@ class Scanner {
                 ',': TokenType.COMMA,
                 '+': TokenType.PLUS,
                 '-': TokenType.MINUS,
-                '/': TokenType.DIV
+                '*': TokenType.MUL,
+                '/': TokenType.DIV,
+                '^': TokenType.POWER,
+                '++': TokenType.INCREMENT,
+                '--': TokenType.DECREMENT
             }[character]
         };
 
@@ -196,33 +200,22 @@ class Scanner {
             case '(':
             case ')':
             case ',':
-            case '+':
+            case '*':
+            case '/':
+            case '^':
                 token = new Token(convertToTokenType(character), character, 0.0, null);
                 break;
+            case '+':
             case '-':
-            case '/':
                 const previousCharacter = character;
                 character = this.getChar();
 
                 if (character === previousCharacter) {
-                    for (; character !== '\n' && character.charCodeAt(0) !== 0; character = this.getChar()) {}
-                    this.index--;
-                    return this.getToken(); /** call recursively */
+                    /** increment or decrement */
+                    token = new Token(convertToTokenType(previousCharacter + character), previousCharacter + character, 0.0, null);
                 } else {
-                    /** binary operations */
                     this.index--;
                     token = new Token(convertToTokenType(previousCharacter), previousCharacter, 0.0, null);
-                    break;
-                }
-            case '*':
-                character = this.getChar();
-
-                if (character === '*') {
-                    token = new Token(TokenType.POWER, '^', 0.0, null);
-                } else {
-                    /** binary operations */
-                    this.index--;
-                    token = new Token(TokenType.MUL, '*', 0.0, null);
                 }
                 break;
             default:

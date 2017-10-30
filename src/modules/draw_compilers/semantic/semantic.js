@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: A semantic module for specifying the meaning notations
  *  - Create Time: Oct, 12nd, 2017
- *  - Update Time: Oct, 12nd, 2017
+ *  - Update Time: Oct, 30th, 2017
  *
  */
 
@@ -47,6 +47,10 @@ Semantic.prototype.getExpressionValue = function (root) {
         return this.getExpressionValue(caseOperator.leftNode) / this.getExpressionValue(caseOperator.rightNode);
     case TokenType.POWER:
         return Math.pow(this.getExpressionValue(caseOperator.leftNode), this.getExpressionValue(caseOperator.rightNode));
+    case TokenType.INCREMENT:
+        return caseOperator.leftNode ? caseOperator.leftNode++ : ++caseOperator.rightNode;
+    case TokenType.DECREMENT:
+        return caseOperator.leftNode ? caseOperator.leftNode-- : --caseOperator.rightNode;
     case TokenType.FUNC:
         const caseFunc = content.caseFunc;
         return caseFunc.mathFunc(this.getExpressionValue(caseFunc.childNode));
