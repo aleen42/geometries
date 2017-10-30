@@ -83,7 +83,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                             Enter in Expression
                                 Enter in Term
                                     Enter in Component
-                                        Enter in atom
+                                        Enter in Atom
                                             Match Token: CONST_ID (380)
                                         Exit from atom
                                     Exit from Component
@@ -93,7 +93,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                                 Enter in Expression
                                     Enter in Term
                                         Enter in Component
-                                            Enter in atom
+                                            Enter in Atom
                                                 Match Token: CONST_ID (140)
                                             Exit from atom
                                         Exit from Component
@@ -120,7 +120,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                         Enter in Expression
                             Enter in Term
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: CONST_ID (0)
                                     Exit from atom
                                 Exit from Component
@@ -130,13 +130,13 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                         Enter in Expression
                             Enter in Term
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: CONST_ID (2)
                                     Exit from atom
                                 Exit from Component
                                 Match Token: MUL (*)
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: CONST_ID (3.1415926)
                                     Exit from atom
                                 Exit from Component
@@ -146,13 +146,13 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                         Enter in Expression
                             Enter in Term
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: CONST_ID (3.1415926)
                                     Exit from atom
                                 Exit from Component
                                 Match Token: DIV (/)
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: CONST_ID (100)
                                     Exit from atom
                                 Exit from Component
@@ -163,12 +163,12 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                         Enter in Expression
                             Enter in Term
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: L_BRACKET (()
                                         Enter in Expression
                                             Enter in Term
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: CONST_ID (5)
                                                     Exit from atom
                                                 Exit from Component
@@ -176,7 +176,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                                             Match Token: MINUS (-)
                                             Enter in Term
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: CONST_ID (7)
                                                     Exit from atom
                                                 Exit from Component
@@ -187,31 +187,31 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                                 Exit from Component
                                 Match Token: MUL (*)
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: FUNC (COS)
                                         Match Token: L_BRACKET (()
                                         Enter in Expression
                                             Enter in Term
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: CONST_ID (2)
                                                     Exit from atom
                                                 Exit from Component
                                                 Match Token: MUL (*)
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: CONST_ID (3.1415926)
                                                     Exit from atom
                                                 Exit from Component
                                                 Match Token: MUL (*)
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: CONST_ID (10)
                                                     Exit from atom
                                                 Exit from Component
                                                 Match Token: MUL (*)
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: T (T)
                                                     Exit from atom
                                                 Exit from Component
@@ -224,30 +224,30 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                             Match Token: PLUS (+)
                             Enter in Term
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: CONST_ID (2.2)
                                     Exit from atom
                                 Exit from Component
                                 Match Token: MUL (*)
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: FUNC (COS)
                                         Match Token: L_BRACKET (()
                                         Enter in Expression
                                             Enter in Term
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: L_BRACKET (()
                                                         Enter in Expression
                                                             Enter in Term
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: CONST_ID (5)
                                                                     Exit from atom
                                                                 Exit from Component
                                                                 Match Token: DIV (/)
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: CONST_ID (7)
                                                                     Exit from atom
                                                                 Exit from Component
@@ -255,7 +255,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                                                             Match Token: MINUS (-)
                                                             Enter in Term
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: CONST_ID (1)
                                                                     Exit from atom
                                                                 Exit from Component
@@ -266,30 +266,30 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                                                 Exit from Component
                                                 Match Token: MUL (*)
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: L_BRACKET (()
                                                         Enter in Expression
                                                             Enter in Term
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: CONST_ID (2)
                                                                     Exit from atom
                                                                 Exit from Component
                                                                 Match Token: MUL (*)
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: CONST_ID (3.1415926)
                                                                     Exit from atom
                                                                 Exit from Component
                                                                 Match Token: MUL (*)
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: CONST_ID (10)
                                                                     Exit from atom
                                                                 Exit from Component
                                                                 Match Token: MUL (*)
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: T (T)
                                                                     Exit from atom
                                                                 Exit from Component
@@ -309,12 +309,12 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                         Enter in Expression
                             Enter in Term
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: L_BRACKET (()
                                         Enter in Expression
                                             Enter in Term
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: CONST_ID (5)
                                                     Exit from atom
                                                 Exit from Component
@@ -322,7 +322,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                                             Match Token: MINUS (-)
                                             Enter in Term
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: CONST_ID (7)
                                                     Exit from atom
                                                 Exit from Component
@@ -333,31 +333,31 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                                 Exit from Component
                                 Match Token: MUL (*)
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: FUNC (SIN)
                                         Match Token: L_BRACKET (()
                                         Enter in Expression
                                             Enter in Term
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: CONST_ID (2)
                                                     Exit from atom
                                                 Exit from Component
                                                 Match Token: MUL (*)
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: CONST_ID (3.1415926)
                                                     Exit from atom
                                                 Exit from Component
                                                 Match Token: MUL (*)
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: CONST_ID (10)
                                                     Exit from atom
                                                 Exit from Component
                                                 Match Token: MUL (*)
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: T (T)
                                                     Exit from atom
                                                 Exit from Component
@@ -370,30 +370,30 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                             Match Token: MINUS (-)
                             Enter in Term
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: CONST_ID (2.2)
                                     Exit from atom
                                 Exit from Component
                                 Match Token: MUL (*)
                                 Enter in Component
-                                    Enter in atom
+                                    Enter in Atom
                                         Match Token: FUNC (SIN)
                                         Match Token: L_BRACKET (()
                                         Enter in Expression
                                             Enter in Term
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: L_BRACKET (()
                                                         Enter in Expression
                                                             Enter in Term
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: CONST_ID (5)
                                                                     Exit from atom
                                                                 Exit from Component
                                                                 Match Token: DIV (/)
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: CONST_ID (7)
                                                                     Exit from atom
                                                                 Exit from Component
@@ -401,7 +401,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                                                             Match Token: MINUS (-)
                                                             Enter in Term
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: CONST_ID (1)
                                                                     Exit from atom
                                                                 Exit from Component
@@ -412,30 +412,30 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                                                 Exit from Component
                                                 Match Token: MUL (*)
                                                 Enter in Component
-                                                    Enter in atom
+                                                    Enter in Atom
                                                         Match Token: L_BRACKET (()
                                                         Enter in Expression
                                                             Enter in Term
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: CONST_ID (2)
                                                                     Exit from atom
                                                                 Exit from Component
                                                                 Match Token: MUL (*)
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: CONST_ID (3.1415926)
                                                                     Exit from atom
                                                                 Exit from Component
                                                                 Match Token: MUL (*)
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: CONST_ID (10)
                                                                     Exit from atom
                                                                 Exit from Component
                                                                 Match Token: MUL (*)
                                                                 Enter in Component
-                                                                    Enter in atom
+                                                                    Enter in Atom
                                                                         Match Token: T (T)
                                                                     Exit from atom
                                                                 Exit from Component

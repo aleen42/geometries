@@ -266,7 +266,7 @@ Parser.prototype.program = function () {
                         let tempNode;
                         let curToken = self.token;
 
-                        self.enter('atom');
+                        self.enter('Atom');
 
                         switch (self.token.type) {
                         case TokenType.CONST_ID:
@@ -294,7 +294,7 @@ Parser.prototype.program = function () {
                             return null;
                         }
 
-                        self.back('atom');
+                        self.back('Atom');
                         return addressNode;
                     }
 
