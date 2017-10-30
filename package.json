@@ -6,6 +6,8 @@
   "scripts": {
     "build": "webpack --progress --profile --colors",
     "watch": "webpack --progress --profile --colors -d --watch",
+    "test:scanner": "./node_modules/.bin/mocha --compilers js:babel-core/register **/scanner.spec.js --reporter spec",
+    "test:parser": "./node_modules/.bin/mocha --compilers js:babel-core/register **/parser.spec.js --reporter spec",
     "test": "./node_modules/.bin/mocha --compilers js:babel-core/register **/*.spec.js --reporter spec"
   },
   "repository": {
