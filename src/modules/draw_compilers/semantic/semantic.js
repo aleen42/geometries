@@ -93,15 +93,15 @@ Semantic.prototype.drawLoop = function (start, end, step, horizontalPtr, vertica
     let x = 0;
     let y = 0;
 
-    /** reset drawing */
-    this.parser.resetDraw();
-    for (this.parser.parameter.parameter = start; this.parser.parameter.parameter <= end; this.parser.parameter.parameter++) {
+    for (this.parser.parameter.parameter = start; this.parser.parameter.parameter <= end; this.parser.parameter.parameter += step) {
         var coordinate = this.calculateCoordinate(horizontalPtr, verticalPtr);
         x = coordinate.x;
         y = coordinate.y;
 
         this.parser.drawCallback(x, y);
     }
+
+    this.parser.lineCompleted();
 };
 
 /** remove a syntax tree */

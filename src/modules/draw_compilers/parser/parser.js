@@ -30,7 +30,7 @@ import Reference from 'compilers/parser/reference';
 /** @namespace options.debug */
 /** @namespace options.isDrawing */
 /** @namespace options.drawingCallback */
-/** @namespace options.resetDrawing */
+/** @namespace options.drawingCompleted */
 /** @namespace options.isSyntaxTreeShown */
 
 /**
@@ -40,10 +40,18 @@ import Reference from 'compilers/parser/reference';
  * @param [isSyntaxTreeShown]
  * @param [isDrawing]
  * @param [drawingCallback]
- * @param [resetDrawing]
+ * @param [lineCompleted]
+ * @param [drawingCompleted]
  * @constructor
  */
-function Parser(str, { debug = false, isSyntaxTreeShown = false, isDrawing = false, drawingCallback = () => {}, resetDrawing = () => {} } = {}) {
+function Parser(str, {
+    debug = false,
+    isSyntaxTreeShown = false,
+    isDrawing = false,
+    drawingCallback = () => {},
+    lineCompleted = () => {},
+    drawingCompleted = () => {}
+} = {}) {
     /** a flag for setting debug process of the module, Parser */
     this.PARSE_DEBUG = debug;
 
@@ -53,7 +61,8 @@ function Parser(str, { debug = false, isSyntaxTreeShown = false, isDrawing = fal
     /** a flag for setting drawing */
     this.isDrawing = isDrawing;
     this.drawCallback = drawingCallback;
-    this.resetDraw = resetDrawing;
+    this.lineCompleted = lineCompleted;
+    this.drawingCompleted = drawingCompleted;
 
     this.errorLineNumber = -1;
     this.indent = -1;
@@ -302,20 +311,23 @@ Parser.prototype.program = function () {
 
                         let leftNode;
                         let rightNode;
+                        let tempTokenType;
 
                         self.enter('Component');
 
                         if (self.token.type === TokenType.INCREMENT || self.token.type === TokenType.DECREMENT) {
                             /** pre-increment or pre-decrement */
-                            self.matchToken(self.token.type);
-                            leftNode = self.makeExprNode(self.token.type, null, atom.call(self), null);
+                            tempTokenType = self.token.type;
+                            self.matchToken(tempTokenType);
+                            leftNode = self.makeExprNode(tempTokenType, null, atom.call(self), null);
                         } else {
                             leftNode = atom.call(self);
 
                             if (self.token.type === TokenType.INCREMENT || self.token.type === TokenType.DECREMENT) {
                                 /** post-increment or post-decrement */
-                                self.matchToken(self.token.type);
-                                leftNode = self.makeExprNode(self.token.type, leftNode, null, null);
+                                tempTokenType = self.token.type;
+                                self.matchToken(tempTokenType);
+                                leftNode = self.makeExprNode(tempTokenType, leftNode, null, null);
                             }
 
                             if (self.token.type === TokenType.POWER) {
@@ -336,14 +348,16 @@ Parser.prototype.program = function () {
 
                     if (self.token.type === TokenType.PLUS || self.token.type === TokenType.MINUS) {
                         /** negative or positive value */
-                        self.matchToken(self.token.type);
+                        const tempTokenType = self.token.type;
+                        self.matchToken(tempTokenType);
+
                         rightNode = factor.call(self);
 
                         const transparent = new Content();
                         transparent.caseConst = 0.0;
 
                         leftNode = new ExprNode(TokenType.CONST_ID, transparent);
-                        rightNode = self.makeExprNode(self.token.type, leftNode, rightNode, null);
+                        rightNode = self.makeExprNode(tempTokenType, leftNode, rightNode, null);
                     } else {
                         rightNode = component.call(self);
                     }
@@ -535,7 +549,7 @@ Parser.prototype.program = function () {
 
             self.matchToken(TokenType.R_BRACKET);
 
-            if (!self.isDrawing) {
+            if (self.isDrawing && !self.PARSE_DEBUG) {
                 self.semantic.drawLoop(start, end, step, x, y);
                 self.semantic.deleteExpressionTree(x);
                 self.semantic.deleteExpressionTree(y);
@@ -556,6 +570,10 @@ Parser.prototype.program = function () {
 
     for (;;) {
         if (self.token.type === TokenType.NONTOKEN) {
+            if (self.isDrawing) {
+                self.drawingCompleted();
+            }
+
             break;
         }
 
