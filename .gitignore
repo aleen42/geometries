@@ -68,3 +68,6 @@ init
 
 # IDEA
 .idea
+
+# Lock
+package-lock.json
