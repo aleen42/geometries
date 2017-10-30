@@ -58,7 +58,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                             )}\n`);
 
                         tempStr += currentMatchedToken[0];
-                        caseStr = caseStr.replace(new RegExp(escapeCharacter(tempStr)), '');
+                        caseStr = caseStr.replace(new RegExp(escapeCharacter(currentMatchedToken[0])), '');
 
                         return result;
                     })
@@ -115,8 +115,8 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
         `);
     });
 
-    it('FOR T FROM -PI TO PI STEP PI/50 DRAW (COS(T),SIN(T));', () => {
-        checkResult('FOR T FROM -PI TO PI STEP PI/50 DRAW (COS(T),SIN(T));', `
+    it('FOR T FROM -PI TO PI STEP PI/50 DRAW (COS(T), SIN(T));', () => {
+        checkResult('FOR T FROM -PI TO PI STEP PI/50 DRAW (COS(T), SIN(T));', `
              Enter in Parser
                  Enter in Program
                      Enter in Statement
