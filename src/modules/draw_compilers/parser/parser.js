@@ -43,7 +43,7 @@ import Reference from 'compilers/parser/reference';
  * @param [resetDrawing]
  * @constructor
  */
-function Parser(str, { debug = false, isSyntaxTreeShown = true, isDrawing = false, drawingCallback = () => {}, resetDrawing = () => {} } = {}) {
+function Parser(str, { debug = false, isSyntaxTreeShown = false, isDrawing = false, drawingCallback = () => {}, resetDrawing = () => {} } = {}) {
     /** a flag for setting debug process of the module, Parser */
     this.PARSE_DEBUG = debug;
 

@@ -59,7 +59,6 @@ import Parser from 'compilers/parser/parser';
 console.log(new Parser('ORIGIN IS (2 * -(-25), 50);', {
     /** debug option is needed for logging */ 
     debug: true,
-    isSyntaxTreeShown: false
 }).outputLog());
 ```
 
@@ -91,4 +90,3 @@ In conclusion, the Parser module will try to parse a given sentence with recursi
  - **Factor Phase**: to match positive(`+`) or negative(`-`) notation
  - **Component Phase**: to match increment(`++`), decrement(`--`), or power(`^`) notation
  - **Atom Phase**: to match constants, variables, functions, or sub-expressions.
- 
