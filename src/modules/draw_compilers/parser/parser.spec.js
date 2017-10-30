@@ -31,7 +31,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
             return str.replace(/(\(|\)|\*|\+)/g, '\\$1');
         };
 
-        const showColorfulTree = function (result) {
+        const showColorfulResult = function (result) {
             const indent = '        ';
             let tempStr = '';
 
@@ -70,7 +70,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
             isSyntaxTreeShown: false
         }).outputLog();
 
-        showColorfulTree(result);
+        showColorfulResult(result);
         result.replace(/\n|\t|\s/g, '').should.equal(expected.replace(/\n|\t|\s/g, ''));
     };
 
