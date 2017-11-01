@@ -14,11 +14,11 @@
  *  - Author: aleen42
  *  - Description: Unit tests for the module, Scanner.
  *  - Create Time: May, 30th, 2017
- *  - Update Time: Oct, 26th, 2017
+ *  - Update Time: Nov, 1st, 2017
  *
  */
 
-import { TokenType, tokenTypeName } from 'compilers/common/tokenType';
+import { tokenTypeName } from 'compilers/common/tokenType';
 import Scanner from 'compilers/scanner/scanner';
 import Chai from 'chai';
 import Color from 'util/color';

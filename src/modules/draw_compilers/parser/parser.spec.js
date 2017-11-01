@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: Unit tests for the module, Scanner.
  *  - Create Time: Oct, 12nd, 2017
- *  - Update Time: Oct, 30th, 2017
+ *  - Update Time: Nov, 1st, 2017
  *
  */
 
