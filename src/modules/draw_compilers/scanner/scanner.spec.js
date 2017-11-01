@@ -56,6 +56,22 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Scanner'), () => {
     });
 
     it('NOT', () => {
-        checkResult('NOT', 'type: ERRTOKEN, lexeme: NOT, value: 0');
+        checkResult('NOT', 'type: RESERVED, lexeme: NOT, value: 0');
+    });
+
+    it('SITA', () => {
+        checkResult('SITA', 'type: VAR, lexeme: SITA, value: 0');
+    });
+
+    it('SITA1', () => {
+        checkResult('SITA1', 'type: VAR, lexeme: SITA1, value: 0');
+    });
+
+    it('SITA_1', () => {
+        checkResult('SITA_1', 'type: VAR, lexeme: SITA_1, value: 0');
+    });
+
+    it('@', () => {
+        checkResult('@', 'type: ERRTOKEN, lexeme: @, value: 0');
     });
 });

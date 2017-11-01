@@ -222,7 +222,7 @@ class Scanner {
                 }
                 break;
             default:
-                token = new Token(TokenType.ERRTOKEN, '', 0.0, null);
+                token = new Token(TokenType.ERRTOKEN, character, 0.0, null);
                 break;
             }
         }

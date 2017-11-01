@@ -122,7 +122,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                      Enter in Statement
                          Enter in For Statement
                              Match Token: FOR (FOR)
-                             Match Token: T (T)
+                             Match Token: VAR (T)
                              Match Token: FROM (FROM)
                              Enter in Expression
                                  Enter in Term
@@ -184,7 +184,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                                                          Enter in Factor
                                                              Enter in Component
                                                                  Enter in Atom
-                                                                     Match Token: T (T)
+                                                                     Match Token: VAR (T)
                                                                  Exit from Atom
                                                              Exit from Component
                                                          Exit from Factor
@@ -209,7 +209,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                                                          Enter in Factor
                                                              Enter in Component
                                                                  Enter in Atom
-                                                                     Match Token: T (T)
+                                                                     Match Token: VAR (T)
                                                                  Exit from Atom
                                                              Exit from Component
                                                          Exit from Factor
