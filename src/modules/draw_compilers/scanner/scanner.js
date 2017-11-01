@@ -35,9 +35,10 @@ class Scanner {
 
     initTokenTab() {
         [
+            /** reserved keyword */
+            { type: TokenType.RESERVED, lexeme: 'NOT', value: 0.0, callback: null },
             { type: TokenType.CONST_ID, lexeme: 'PI', value: 3.1415926, callback: null },
             { type: TokenType.CONST_ID, lexeme: 'E', value: 2.71828, callback: null },
-            { type: TokenType.T, lexeme: 'T', value: 0.0, callback: null },
             { type: TokenType.FUNC, lexeme: 'SIN', value: 0.0, callback: Math.sin },
             { type: TokenType.FUNC, lexeme: 'COS', value: 0.0, callback: Math.cos },
             { type: TokenType.FUNC, lexeme: 'TAN', value: 0.0, callback: Math.tan },
@@ -89,7 +90,9 @@ class Scanner {
 
     judgeKeyToken(idString) {
         const legalTokenTabs = this.tokenTabs.filter(item => item.lexeme === idString)[0];
-        return legalTokenTabs === void 0 ? new Token(TokenType.ERRTOKEN, '', 0.0, null) : legalTokenTabs;
+
+        /** if do not match any legal token, then mark it as a parameter */
+        return legalTokenTabs === void 0 ? new Token(TokenType.VAR, idString, 0.0, null) : legalTokenTabs;
     }
 
     getToken() {
@@ -174,9 +177,9 @@ class Scanner {
         };
 
         /** DFA */
-        if (/^[a-z]+$/i.test(character)) {
-            /** function, keyword, PI, E, etc. */
-            tryToMatch(/^[a-z0-9]+$/i);
+        if (/^[a-z][_0-9a-z]*$/i.test(character)) {
+            /** function, keyword, PI, E, or variables. */
+            tryToMatch(/^[_0-9a-z]+$/i);
             this.index--;
             str += this.tokenBuffer;
 

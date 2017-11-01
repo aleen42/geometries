@@ -67,7 +67,7 @@ function Parser(str, {
     this.errorLineNumber = -1;
     this.indent = -1;
 
-    this.parameter = new Reference();
+    this.variables = [];
 
     /** default value */
     this.originX = 300;
@@ -160,8 +160,8 @@ Parser.prototype.printSyntaxTree = function (root, indent) {
     case TokenType.CONST_ID:
         this.log(`${info} ${root.content.caseConst}`);
         break;
-    case TokenType.T:
-        this.log(`${info} T`);
+    case TokenType.VAR:
+        this.log(`${info} ${root.content.caseConst}`);
         break;
     default:
         this.log(`${info} Error Tree Node!`);
@@ -169,7 +169,7 @@ Parser.prototype.printSyntaxTree = function (root, indent) {
     }
 
     if (root.tokenType === TokenType.CONST_ID
-        || root.tokenType === TokenType.T) {
+        || root.tokenType === TokenType.VAR) {
         return;
     }
 
@@ -236,14 +236,21 @@ Parser.prototype.matchToken = function (tokenType, value) {
 
 Parser.prototype.makeExprNode = function (tokenType, leftNode, rightNode, funcPtr) {
     const content = new Content();
-    const node = new ExprNode(tokenType, content);
+    let node = new ExprNode(tokenType, content);
 
     switch (tokenType) {
     case TokenType.CONST_ID:
         node.content.caseConst = parseFloat(leftNode);
         break;
-    case TokenType.T:
-        node.content.caseParamPtr = this.parameter;
+    case TokenType.VAR:
+        /** get the same variable node */
+        var variableNode = this.variables.filter(item => item.content.lexeme === content.lexeme)[0];
+        if (variableNode) {
+            node = variableNode;
+        } else {
+            node.content.caseParamPtr = new Reference();
+            this.variables.push(node);
+        }
         break;
     case TokenType.FUNC:
         node.content.caseFunc.mathFunc = funcPtr;
@@ -284,9 +291,9 @@ Parser.prototype.program = function () {
                                 self.matchToken(TokenType.CONST_ID, curToken.value);
                                 addressNode = self.makeExprNode(TokenType.CONST_ID, curToken.value, null, null);
                                 break;
-                            case TokenType.T:
-                                self.matchToken(TokenType.T);
-                                addressNode = self.makeExprNode(TokenType.T, null, null, null);
+                            case TokenType.VAR:
+                                self.matchToken(TokenType.VAR, curToken.lexeme);
+                                addressNode = self.makeExprNode(TokenType.VAR, null, null, null);
                                 break;
                             case TokenType.FUNC:
                                 self.matchToken(TokenType.FUNC);
@@ -509,7 +516,7 @@ Parser.prototype.program = function () {
             self.enter('For Statement');
 
             self.matchToken(TokenType.FOR);
-            self.matchToken(TokenType.T);
+            self.matchToken(TokenType.VAR);
             self.matchToken(TokenType.FROM);
 
             /** calculate the value of start point to draw */

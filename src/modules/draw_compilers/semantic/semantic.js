@@ -56,8 +56,8 @@ Semantic.prototype.getExpressionValue = function (root) {
         return caseFunc.mathFunc(this.getExpressionValue(caseFunc.childNode));
     case TokenType.CONST_ID:
         return content.caseConst;
-    case TokenType.T:
-        return content.caseParamPtr.parameter;
+    case TokenType.VAR:
+        return this.parser.variables.filter(item => item === root)[0].content.caseParamPtr.parameter;
     default:
         return 0;
     }
@@ -93,7 +93,8 @@ Semantic.prototype.drawLoop = function (start, end, step, horizontalPtr, vertica
     let x = 0;
     let y = 0;
 
-    for (this.parser.parameter.parameter = start; this.parser.parameter.parameter <= end; this.parser.parameter.parameter += step) {
+    var pointer = this.parser.variables[0].content.caseParamPtr;
+    for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
         var coordinate = this.calculateCoordinate(horizontalPtr, verticalPtr);
         x = coordinate.x;
         y = coordinate.y;
