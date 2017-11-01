@@ -89,20 +89,9 @@ Semantic.prototype.calculateCoordinate = function (horizontalExpression, vertica
 };
 
 /** loop for drawing */
-Semantic.prototype.drawLoop = function (start, end, step, horizontalPtr, verticalPtr) {
-    let x = 0;
-    let y = 0;
-
-    var pointer = this.parser.variables[0].content.caseParamPtr;
-    for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
-        var coordinate = this.calculateCoordinate(horizontalPtr, verticalPtr);
-        x = coordinate.x;
-        y = coordinate.y;
-
-        this.parser.drawCallback(x, y);
-    }
-
-    this.parser.lineCompleted();
+Semantic.prototype.draw = function (start, end, step, horizontalPtr, verticalPtr) {
+    var coordinate = this.calculateCoordinate(horizontalPtr, verticalPtr);
+    this.parser.drawCallback(coordinate.x, coordinate.y);
 };
 
 /** remove a syntax tree */

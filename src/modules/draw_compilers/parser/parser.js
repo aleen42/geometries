@@ -28,7 +28,6 @@ import Content from 'compilers/parser/content';
 import Reference from 'compilers/parser/reference';
 
 /** @namespace options.debug */
-/** @namespace options.isDrawing */
 /** @namespace options.drawingCallback */
 /** @namespace options.drawingCompleted */
 /** @namespace options.isSyntaxTreeShown */
@@ -38,7 +37,6 @@ import Reference from 'compilers/parser/reference';
  * @param str
  * @param [debug]
  * @param [isSyntaxTreeShown]
- * @param [isDrawing]
  * @param [drawingCallback]
  * @param [lineCompleted]
  * @param [drawingCompleted]
@@ -47,7 +45,6 @@ import Reference from 'compilers/parser/reference';
 function Parser(str, {
     debug = false,
     isSyntaxTreeShown = false,
-    isDrawing = false,
     drawingCallback = () => {},
     lineCompleted = () => {},
     drawingCompleted = () => {}
@@ -59,7 +56,6 @@ function Parser(str, {
     this.isSyntaxTreeShown = isSyntaxTreeShown;
 
     /** a flag for setting drawing */
-    this.isDrawing = isDrawing;
     this.drawCallback = drawingCallback;
     this.lineCompleted = lineCompleted;
     this.drawingCompleted = drawingCompleted;
@@ -67,7 +63,10 @@ function Parser(str, {
     this.errorLineNumber = -1;
     this.indent = -1;
 
+    /** an array for storing defined variables */
     this.variables = [];
+    /** an array for storing defined loop */
+    this.loops = [];
 
     /** default value */
     this.originX = 300;
@@ -244,10 +243,11 @@ Parser.prototype.makeExprNode = function (tokenType, leftNode, rightNode, funcPt
         break;
     case TokenType.VAR:
         /** get the same variable node */
-        var variableNode = this.variables.filter(item => item.content.lexeme === content.lexeme)[0];
+        var variableNode = this.variables.filter(item => item.content.caseConst === leftNode)[0];
         if (variableNode) {
             node = variableNode;
         } else {
+            node.content.caseConst = leftNode;
             node.content.caseParamPtr = new Reference();
             this.variables.push(node);
         }
@@ -293,7 +293,7 @@ Parser.prototype.program = function () {
                                 break;
                             case TokenType.VAR:
                                 self.matchToken(TokenType.VAR, curToken.lexeme);
-                                addressNode = self.makeExprNode(TokenType.VAR, null, null, null);
+                                addressNode = self.makeExprNode(TokenType.VAR, curToken.lexeme, null, null);
                                 break;
                             case TokenType.FUNC:
                                 self.matchToken(TokenType.FUNC);
@@ -507,6 +507,7 @@ Parser.prototype.program = function () {
             /** the step of each drawing process */
             let step = 0;
 
+            let loopNode;
             let startNode;
             let endNode;
             let stepNode;
@@ -516,23 +517,27 @@ Parser.prototype.program = function () {
             self.enter('For Statement');
 
             self.matchToken(TokenType.FOR);
-            self.matchToken(TokenType.VAR);
+
+            loopNode = self.makeExprNode(TokenType.VAR, self.token.lexeme, null, null);
+            self.loops.push(loopNode);
+            self.matchToken(TokenType.VAR, self.token.lexeme);
+
             self.matchToken(TokenType.FROM);
 
-            /** calculate the value of start point to draw */
             startNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
+                /** calculate the value of start point */
                 start = self.semantic.getExpressionValue(startNode);
                 self.semantic.deleteExpressionTree(startNode);
             }
 
             self.matchToken(TokenType.TO);
 
-            /** calculate the value of end point to draw */
             endNode = expression.call(self);
 
             if (!self.PARSE_DEBUG) {
+                /** calculate the value of end point */
                 end = self.semantic.getExpressionValue(endNode);
                 self.semantic.deleteExpressionTree(endNode);
             }
@@ -545,25 +550,49 @@ Parser.prototype.program = function () {
                 self.semantic.deleteExpressionTree(stepNode);
             }
 
-            self.matchToken(TokenType.DRAW);
-            self.matchToken(TokenType.L_BRACKET);
+            if (self.token.type === TokenType.FOR) {
+                loopNode.childLoopNode = statement.call(self);
 
-            x = expression.call(self);
+                if (!self.PARSE_DEBUG) {
+                    loopNode.execute = function () {
+                        var pointer = loopNode.content.caseParamPtr;
+                        for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
+                            loopNode.childLoopNode.execute();
+                        }
+                    };
+                }
+            }
 
-            self.matchToken(TokenType.COMMA);
+            /** loop for drawing */
+            if (self.token.type === TokenType.DRAW) {
+                self.matchToken(TokenType.DRAW);
+                self.matchToken(TokenType.L_BRACKET);
 
-            y = expression.call(self);
+                x = expression.call(self);
 
-            self.matchToken(TokenType.R_BRACKET);
+                self.matchToken(TokenType.COMMA);
 
-            if (self.isDrawing && !self.PARSE_DEBUG) {
-                self.semantic.drawLoop(start, end, step, x, y);
-                self.semantic.deleteExpressionTree(x);
-                self.semantic.deleteExpressionTree(y);
+                y = expression.call(self);
+
+                self.matchToken(TokenType.R_BRACKET);
+
+                if (!self.PARSE_DEBUG) {
+                    loopNode.execute = function () {
+                        var pointer = loopNode.content.caseParamPtr;
+                        for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
+                            self.semantic.draw(start, end, step, x, y);
+                            self.semantic.deleteExpressionTree(x);
+                            self.semantic.deleteExpressionTree(y);
+                        }
+
+                        self.lineCompleted();
+                    };
+                }
             }
 
             self.back('For Statement');
-            break;
+            self.back('Statement');
+            return loopNode;
         default:
             self.syntaxError('Unexpected Token');
             self.errorLineNumber = self.scanner.lineNumber;
@@ -577,7 +606,7 @@ Parser.prototype.program = function () {
 
     for (;;) {
         if (self.token.type === TokenType.NONTOKEN) {
-            if (self.isDrawing) {
+            if (!self.PARSE_DEBUG) {
                 self.drawingCompleted();
             }
 
@@ -588,7 +617,14 @@ Parser.prototype.program = function () {
             statement.call(self);
         }
 
-        self.matchToken(TokenType.SEMICOLON)
+        self.matchToken(TokenType.SEMICOLON);
+
+        if (!self.PARSE_DEBUG && self.loops.length > 0) {
+            /** execute from the first loop when it is a loop statement */
+            self.loops[0].execute();
+            /** clear the array */
+            self.loops = [];
+        }
     }
 
     self.back('Program');
