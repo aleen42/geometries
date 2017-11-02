@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: A scanner module for scanning validated content
  *  - Create Time: May, 30th, 2017
- *  - Update Time: Nov, 1st, 2017
+ *  - Update Time: Nov, 2nd, 2017
  *
  */
 
@@ -171,6 +171,7 @@ class Scanner {
                 '*': TokenType.MUL,
                 '/': TokenType.DIV,
                 '^': TokenType.POWER,
+                '%': TokenType.MOD,
                 '++': TokenType.INCREMENT,
                 '--': TokenType.DECREMENT
             }[character]
@@ -206,6 +207,7 @@ class Scanner {
             case '*':
             case '/':
             case '^':
+            case '%':
                 token = new Token(convertToTokenType(character), character, 0.0, null);
                 break;
             case '+':

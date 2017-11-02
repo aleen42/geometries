@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: A parser module for parsing content
  *  - Create Time: May, 31st, 2017
- *  - Update Time: Nov, 1st, 2017
+ *  - Update Time: Nov, 2nd, 2017
  *
  */
 
@@ -151,7 +151,10 @@ Parser.prototype.printSyntaxTree = function (root, indent) {
         this.log(`${info} /`);
         break;
     case TokenType.POWER:
-        this.log(`${info} **`);
+        this.log(`${info} ^`);
+        break;
+    case TokenType.MOD:
+        this.log(`${info} %`);
         break;
     case TokenType.FUNC:
         this.log(`${info} ${root.content.caseFunc.mathFunc.name}`);
@@ -379,7 +382,9 @@ Parser.prototype.program = function () {
                 let rightNode;
 
                 for (;;) {
-                    if (self.token.type !== TokenType.MUL && self.token.type !== TokenType.DIV) {
+                    if (self.token.type !== TokenType.MUL
+                        && self.token.type !== TokenType.DIV
+                        && self.token.type !== TokenType.MOD) {
                         break;
                     }
 
@@ -580,7 +585,7 @@ Parser.prototype.program = function () {
                     loopNode.execute = function () {
                         var pointer = loopNode.content.caseParamPtr;
                         for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
-                            self.semantic.draw(start, end, step, x, y);
+                            self.semantic.draw(x, y);
                             self.semantic.deleteExpressionTree(x);
                             self.semantic.deleteExpressionTree(y);
                         }

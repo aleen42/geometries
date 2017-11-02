@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: A semantic module for specifying the meaning notations
  *  - Create Time: Oct, 12nd, 2017
- *  - Update Time: Nov, 1st, 2017
+ *  - Update Time: Nov, 2nd, 2017
  *
  */
 
@@ -45,6 +45,8 @@ Semantic.prototype.getExpressionValue = function (root) {
         return this.getExpressionValue(caseOperator.leftNode) * this.getExpressionValue(caseOperator.rightNode);
     case TokenType.DIV:
         return this.getExpressionValue(caseOperator.leftNode) / this.getExpressionValue(caseOperator.rightNode);
+    case TokenType.MOD:
+        return this.getExpressionValue(caseOperator.leftNode) % this.getExpressionValue(caseOperator.rightNode);
     case TokenType.POWER:
         return Math.pow(this.getExpressionValue(caseOperator.leftNode), this.getExpressionValue(caseOperator.rightNode));
     case TokenType.INCREMENT:
@@ -89,7 +91,7 @@ Semantic.prototype.calculateCoordinate = function (horizontalExpression, vertica
 };
 
 /** loop for drawing */
-Semantic.prototype.draw = function (start, end, step, horizontalPtr, verticalPtr) {
+Semantic.prototype.draw = function (horizontalPtr, verticalPtr) {
     var coordinate = this.calculateCoordinate(horizontalPtr, verticalPtr);
     this.parser.drawCallback(coordinate.x, coordinate.y);
 };
@@ -107,6 +109,7 @@ Semantic.prototype.deleteExpressionTree = function (root) {
     case TokenType.MUL:
     case TokenType.DIV:
     case TokenType.POWER:
+    case TokenType.MOD:
         const caseOperator = content.caseOperator;
         this.deleteExpressionTree(caseOperator.leftNode);
         this.deleteExpressionTree(caseOperator.rightNode);

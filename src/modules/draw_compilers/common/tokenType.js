@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: the type of token
  *  - Create Time: Oct, 12nd, 2017
- *  - Update Time: Nov, 1st, 2017
+ *  - Update Time: Nov, 2nd, 2017
  *
  */
 
@@ -32,7 +32,8 @@ const tokenTypeName = [
     'NONTOKEN', /** empty notation (the end of a program) */
     'ERRTOKEN', /** error notation (invalid input) */
     'INCREMENT', /** ++ operator */
-    'DECREMENT' /** -- operator */
+    'DECREMENT', /** -- operator */
+    'MOD' /** % operator */
 ];
 
 /** @namespace TokenType.RESERVED      0 */
@@ -61,5 +62,6 @@ const tokenTypeName = [
 /** @namespace TokenType.ERRTOKEN     23 */
 /** @namespace TokenType.INCREMENT    24 */
 /** @namespace TokenType.DECREMENT    25 */
+/** @namespace TokenType.MOD          26 */
 const TokenType = Util.enumerate(tokenTypeName);
 export { TokenType, tokenTypeName };
