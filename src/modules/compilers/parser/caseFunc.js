@@ -10,15 +10,16 @@
  *             More than a coder, More than a designer
  *  ===============================================================
  *
- *  - Document: caseOperator.js
+ *  - Document: caseFunc.js
  *  - Author: aleen42
  *  - Description: A data structure
  *  - Create Time: May, 31st, 2017
- *  - Update Time: May, 31st, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  */
 
-export default function CaseOperator(leftNode, rightNode) {
-    this.leftNode = leftNode;
-    this.rightNode = rightNode;
+/* global module */
+module.exports = function CaseFunc(childNode, mathFunc) {
+    this.childNode = childNode;
+    this.mathFunc = mathFunc;
 };

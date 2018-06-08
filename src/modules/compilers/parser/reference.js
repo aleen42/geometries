@@ -10,15 +10,15 @@
  *             More than a coder, More than a designer
  *  ===============================================================
  *
- *  - Document: exprNode.js
+ *  - Document: reference.js
  *  - Author: aleen42
  *  - Description: A data structure
  *  - Create Time: May, 31st, 2017
- *  - Update Time: May, 31st, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  */
 
-export default function ExprNode(tokenType, content) {
-    this.tokenType = tokenType;
-    this.content = content;
+/* global module */
+module.exports = function Reference() {
+    this.parameter = 0;
 };

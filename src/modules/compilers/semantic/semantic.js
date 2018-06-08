@@ -14,11 +14,12 @@
  *  - Author: aleen42
  *  - Description: A semantic module for specifying the meaning notations
  *  - Create Time: Oct, 12nd, 2017
- *  - Update Time: Nov, 2nd, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  */
 
-import { TokenType } from 'compilers/common/tokenType';
+/* global require, module */
+const { TokenType } = require('../common/tokenType');
 
 function Semantic(parser) {
     this.parser = parser;
@@ -125,4 +126,4 @@ Semantic.prototype.deleteExpressionTree = function (root) {
     root = null;
 };
 
-export default Semantic;
+module.exports = Semantic;

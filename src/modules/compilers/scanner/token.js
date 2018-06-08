@@ -10,27 +10,18 @@
  *             More than a coder, More than a designer
  *  ===============================================================
  *
- *  - Document: content.js
+ *  - Document: token.js
  *  - Author: aleen42
- *  - Description: A data structure
- *  - Create Time: May, 31st, 2017
- *  - Update Time: May, 31st, 2017
+ *  - Description: A data structure for notations
+ *  - Create Time: May, 30th, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  */
 
-export default function Content() {
-    /** binary operators */
-    this.caseOperator = {
-        leftNode: null,
-        rightNode: null
-    };
-    /** functions */
-    this.caseFunc = {
-        mathFunc: null,
-        childNode: null
-    };
-    /** const */
-    this.caseConst = null;
-    /** parameter pointer */
-    this.caseParamPtr = null;
+/* global module */
+module.exports = function Token(type, lexeme, value, callback) {
+    this.type = type;
+    this.lexeme = lexeme;
+    this.value = value;
+    this.callback = callback;
 };

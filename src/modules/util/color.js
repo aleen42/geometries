@@ -14,19 +14,13 @@
  *  - Author: aleen42
  *  - Description: a util tool for setting color of console
  *  - Create Time: Oct, 26th, 2017
- *  - Update Time: Oct, 26th, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  */
 
-import Util from './index';
-
-var _colorMap = Util.enumerate(['BLACK', 'RED', 'GREEN', 'YELLOW', 'BLUE', 'MAGENTA', 'CYAN', 'WHITE']);
-
-export default {
-    nestedColor: function (type, string) {
-        return `\x1b[0m${string}\x1b[3${_colorMap[type]}m`;
-    },
-    wrapColor: function (type, string) {
-        return `\x1b[3${_colorMap[type]}m${string}\x1b[0m`;
-    }
+/* global require, module */
+const _colorMap = require('./index').enumerate(['BLACK', 'RED', 'GREEN', 'YELLOW', 'BLUE', 'MAGENTA', 'CYAN', 'WHITE']);
+module.exports = {
+    nestedColor: (type, string) => `\x1b[0m${string}\x1b[3${_colorMap[type]}m`,
+    wrapColor: (type, string) => `\x1b[3${_colorMap[type]}m${string}\x1b[0m`
 };

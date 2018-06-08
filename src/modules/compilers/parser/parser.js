@@ -14,18 +14,19 @@
  *  - Author: aleen42
  *  - Description: A parser module for parsing content
  *  - Create Time: May, 31st, 2017
- *  - Update Time: Nov, 2nd, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  */
 
-import { TokenType, tokenTypeName } from 'compilers/common/tokenType';
+/* global require, module */
+const { TokenType, tokenTypeName } = require('../common/tokenType');
 
-import Scanner from 'compilers/scanner/scanner';
-import Semantic from 'compilers/semantic/semantic';
+const Scanner = require('../scanner/scanner');
+const Semantic = require('../semantic/semantic');
 
-import ExprNode from 'compilers/parser/exprNode';
-import Content from 'compilers/parser/content';
-import Reference from 'compilers/parser/reference';
+const ExprNode = require('./exprNode');
+const Content = require('./content');
+const Reference = require('./reference');
 
 /** @namespace options.debug */
 /** @namespace options.drawingCallback */
@@ -635,4 +636,4 @@ Parser.prototype.program = function () {
     self.back('Program');
 };
 
-export default Parser;
+module.exports = Parser;

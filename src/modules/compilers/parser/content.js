@@ -10,14 +10,28 @@
  *             More than a coder, More than a designer
  *  ===============================================================
  *
- *  - Document: reference.js
+ *  - Document: content.js
  *  - Author: aleen42
  *  - Description: A data structure
  *  - Create Time: May, 31st, 2017
- *  - Update Time: May, 31st, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  */
 
-export default function Reference() {
-    this.parameter = 0;
+/* global module */
+module.exports = function Content() {
+    /** binary operators */
+    this.caseOperator = {
+        leftNode: null,
+        rightNode: null
+    };
+    /** functions */
+    this.caseFunc = {
+        mathFunc: null,
+        childNode: null
+    };
+    /** const */
+    this.caseConst = null;
+    /** parameter pointer */
+    this.caseParamPtr = null;
 };

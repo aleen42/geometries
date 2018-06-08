@@ -10,15 +10,16 @@
  *             More than a coder, More than a designer
  *  ===============================================================
  *
- *  - Document: caseFunc.js
+ *  - Document: exprNode.js
  *  - Author: aleen42
  *  - Description: A data structure
  *  - Create Time: May, 31st, 2017
- *  - Update Time: May, 31st, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  */
 
-export default function CaseFunc(childNode, mathFunc) {
-    this.childNode = childNode;
-    this.mathFunc = mathFunc;
+/* global module */
+module.exports = function ExprNode(tokenType, content) {
+    this.tokenType = tokenType;
+    this.content = content;
 };

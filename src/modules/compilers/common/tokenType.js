@@ -14,11 +14,12 @@
  *  - Author: aleen42
  *  - Description: the type of token
  *  - Create Time: Oct, 12nd, 2017
- *  - Update Time: Nov, 2nd, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  */
 
-import Util from 'util/index';
+/* global require, module */
+const Util = require('../../util/index');
 
 const tokenTypeName = [
     'RESERVED',
@@ -64,4 +65,7 @@ const tokenTypeName = [
 /** @namespace TokenType.DECREMENT    25 */
 /** @namespace TokenType.MOD          26 */
 const TokenType = Util.enumerate(tokenTypeName);
-export { TokenType, tokenTypeName };
+module.exports = {
+    TokenType,
+    tokenTypeName
+};

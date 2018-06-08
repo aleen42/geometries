@@ -14,13 +14,14 @@
  *  - Author: aleen42
  *  - Description: Unit tests for the module, Scanner.
  *  - Create Time: Oct, 12nd, 2017
- *  - Update Time: Nov, 1st, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  */
 
-import Parser from 'compilers/parser/parser';
-import Chai from 'chai';
-import Color from 'util/color';
+/* global require, module */
+const Parser = require('./parser');
+const Chai = require('chai');
+const Color = require('../../util/color');
 
 Chai.should();
 
@@ -41,27 +42,27 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                         .replace(/\n\t/g, `\n${indent}\t\t`)
                         .replace(/\t/g, '| ')
                         .replace(/\| {2}([a-z])/gi, '+-- $1')
-                    }\n`).replace(/(\| *.*)?Match Token: ([_A-Z]+) \((.+)\)\n/gi, (whole, prefix, type, lexeme) => {
-                        let tempLexeme = lexeme;
-                        tempLexeme = tempLexeme === '3.1415926' ? 'PI' : tempLexeme;
-                        tempLexeme = tempLexeme === '2.71828' ? 'E' : tempLexeme;
+                }\n`).replace(/(\| *.*)?Match Token: ([_A-Z]+) \((.+)\)\n/gi, (whole, prefix, type, lexeme) => {
+                    let tempLexeme = lexeme;
+                    tempLexeme = tempLexeme === '3.1415926' ? 'PI' : tempLexeme;
+                    tempLexeme = tempLexeme === '2.71828' ? 'E' : tempLexeme;
 
-                        const currentMatchedToken = new RegExp(`\\s*(${escapeCharacter(tempLexeme)})`).exec(caseStr);
+                    const currentMatchedToken = new RegExp(`\\s*(${escapeCharacter(tempLexeme)})`).exec(caseStr);
 
-                        let result = `${prefix}Match Token: ${type} (${Color.nestedColor('GREEN', Color.wrapColor('RED', lexeme))})\n`
-                            .replace(/(Match Token: .+?)\n/gi, `${Color.nestedColor('YELLOW', Color.wrapColor('GREEN', '$1'))
-                            + `\n${indent}${prefix}${new Array(Math.ceil((10 - prefix.match(/\| /g).length) / 4) + 5).join('\t')}`
-                            + tempStr
-                            + currentMatchedToken[0].replace(
-                                new RegExp(`(${escapeCharacter(currentMatchedToken[1])})`),
-                                Color.nestedColor('YELLOW', Color.wrapColor('RED', '$1'))
-                            )}\n`);
+                    let result = `${prefix}Match Token: ${type} (${Color.nestedColor('GREEN', Color.wrapColor('RED', lexeme))})\n`
+                        .replace(/(Match Token: .+?)\n/gi, `${Color.nestedColor('YELLOW', Color.wrapColor('GREEN', '$1'))
+                        + `\n${indent}${prefix}${new Array(Math.ceil((10 - prefix.match(/\| /g).length) / 4) + 5).join('\t')}`
+                        + tempStr
+                        + currentMatchedToken[0].replace(
+                            new RegExp(`(${escapeCharacter(currentMatchedToken[1])})`),
+                            Color.nestedColor('YELLOW', Color.wrapColor('RED', '$1'))
+                        )}\n`);
 
-                        tempStr += currentMatchedToken[0];
-                        caseStr = caseStr.replace(new RegExp(escapeCharacter(currentMatchedToken[0])), '');
+                    tempStr += currentMatchedToken[0];
+                    caseStr = caseStr.replace(new RegExp(escapeCharacter(currentMatchedToken[0])), '');
 
-                        return result;
-                    })
+                    return result;
+                })
             );
         };
 

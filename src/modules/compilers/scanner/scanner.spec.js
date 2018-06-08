@@ -14,14 +14,15 @@
  *  - Author: aleen42
  *  - Description: Unit tests for the module, Scanner.
  *  - Create Time: May, 30th, 2017
- *  - Update Time: Nov, 1st, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  */
 
-import { tokenTypeName } from 'compilers/common/tokenType';
-import Scanner from 'compilers/scanner/scanner';
-import Chai from 'chai';
-import Color from 'util/color';
+/* global require */
+const { tokenTypeName } = require('../common/tokenType');
+const Scanner = require('./scanner');
+const Chai = require('chai');
+const Color = require('../../util/color');
 
 Chai.should();
 

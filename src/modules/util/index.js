@@ -13,21 +13,21 @@
  *  - Document: util.js
  *  - Author: aleen42
  *  - Description: A util file for making some external functions
-                   for helping
+ *                 for helping
  *  - Create Time: May, 30th, 2017
- *  - Update Time: Oct, 13rd, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  *****************************************************************/
 
-const Util = {};
-Util.enumerate = arr => {
-    const returnObj = {};
+/* global module */
+module.exports = {
+    enumerate: arr => {
+        const returnObj = {};
 
-    arr.forEach((item, index) => {
-        returnObj[item] = index;
-    });
+        arr.forEach((item, index) => {
+            returnObj[item] = index;
+        });
 
-    return returnObj;
+        return returnObj;
+    }
 };
-
-export default Util;

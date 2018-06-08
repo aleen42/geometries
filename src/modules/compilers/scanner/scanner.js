@@ -14,12 +14,13 @@
  *  - Author: aleen42
  *  - Description: A scanner module for scanning validated content
  *  - Create Time: May, 30th, 2017
- *  - Update Time: Nov, 2nd, 2017
+ *  - Update Time: Jun, 6th, 2018
  *
  */
 
-import { TokenType } from 'compilers/common/tokenType';
-import Token from 'compilers/scanner/token';
+/* global require, module */
+const { TokenType } = require('../common/tokenType');
+const Token = require('./token');
 
 class Scanner {
     constructor() {
@@ -233,4 +234,4 @@ class Scanner {
     }
 }
 
-export default Scanner;
+module.exports = Scanner;
