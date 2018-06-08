@@ -39,9 +39,9 @@
     "babel-register": "^6.24.1",
     "chai": "^3.5.0",
     "css-loader": "^0.23.1",
-    "eslint": "^3.19.0",
-    "eslint-config-coremail": "^0.1.1",
-    "eslint-loader": "^1.7.1",
+    "eslint": "^4.19.1",
+    "eslint-config-aleen42": "^1.0.2",
+    "eslint-loader": "^2.0.0",
     "mocha": "^2.4.5",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.2"

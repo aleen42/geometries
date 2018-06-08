@@ -1,4 +1,6 @@
 
 ---
 root    : true
-extends : ./.eslintStandard.yaml
+extends : aleen42
+
+# project specific config
