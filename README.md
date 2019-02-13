@@ -1,16 +1,19 @@
-## geometries
-
 <p align="center">
     <img alt="geometries" src="./docs/logo.png" />
 </p>
 
-<br />
+## geometries [[**demo**](https://aleen42.github.io/geometries/)]
 
 <p align="center">
     <img alt="geometries" src="./docs/series.png" />
 </p>
 
 <br />
+
+[Here](https://aleen42.github.io/geometries/), you can check the demo directly. And there are a list of tasks to complete:
+
+- [ ] display syntax exceptions
+- [ ] syntax highlight
 
 "Geometries" is mainly a JavaScript project for writing a drawing compiler to generate complicated geometries. Inspired by [the project](https://github.com/aleen42/FuncDrawCompiler) written before with C Sharp, and UI rendered by WPF, I hope it can be also completed as a module in JavaScript. Furthermore, vector graphics can also be an awesome feature especially when a designer hopes to use programs to generate into what they are similar to.
 
