@@ -1,0 +1,13 @@
+ORIGIN IS (200, 300);
+SCALE IS (40, 40);
+ROT IS 2.3;
+FOR SITA FROM 0 TO 20 * PI / 360 STEP PI / 360
+    FOR K FROM 0 TO 10 STEP 1
+        DRAW (
+            COS(K * 2 / 10 * PI - PI / 2 - SITA)
+                * (1 - K % 2 * 0.5)
+                * (SITA / PI * 75 + 1),
+            SIN(K * 2 / 10 * PI - PI / 2 - SITA)
+                * (1 - K % 2 * 0.5)
+                * (SITA / PI * 75 + 1)
+        );

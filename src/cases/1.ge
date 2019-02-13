@@ -1,0 +1,8 @@
+ORIGIN IS (200, 300);
+SCALE is (100, 100);
+FOR BETA FROM 0 to 2 * PI STEP PI / 30
+    FOR SITA from 0 to 2 * PI STEP PI / 180
+        DRAW(
+            COS(SITA) + COS(BETA) - 0.4 * COS(BETA),
+            SIN(SITA) + SIN(BETA) - 0.4 * SIN(BETA)
+        );

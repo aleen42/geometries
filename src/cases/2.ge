@@ -1,0 +1,7 @@
+ORIGIN IS (200, 250);
+SCALE IS (2.5, 2.5);
+FOR T FROM 0 TO 2 * PI STEP PI / 90
+    DRAW(
+        60 * COS(20 * PI * T) + 1.5 * T,
+        60 * SIN(20 * PI * T) + 0.5 * T
+    );

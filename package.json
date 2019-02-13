@@ -27,7 +27,10 @@
   "homepage": "https://github.com/aleen42/geometries#readme",
   "dependencies": {
     "react": "16.8.1",
-    "react-dom": "16.8.1"
+    "react-dom": "16.8.1",
+    "react-ace": "6.4.0",
+    "prop-types": "15.7.1",
+    "brace": "0.11.1"
   },
   "devDependencies": {
     "babel-core": "6.26.0",
@@ -38,6 +41,11 @@
     "eslint": "5.13.0",
     "eslint-config-aleen42": "^1.0.3",
     "eslint-loader": "2.1.2",
+    "raw-loader": "1.0.0",
+    "less": "3.9.0",
+    "less-loader": "4.1.0",
+    "style-loader": "0.23.1",
+    "css-loader": "2.1.0",
     "mocha": "^2.4.5",
     "webpack": "4.19.0",
     "webpack-cli": "3.2.3"

@@ -13,53 +13,60 @@
  *  - Document: webpack.config.js
  *  - Author: aleen42
  *  - Description: A configuration file for configuring Webpack
- *  - Create Time: May, 30th, 2017
- *  - Update Time: Oct, 30th, 2017
+ *  - Create Time: May 30th, 2017
+ *  - Update Time: Feb 13rd, 2019
  *
  */
 
 const path = require('path');
 
 module.exports = {
-    entry: './src/index.js',
+    entry: './src/index.jsx',
     output: {
         path: path.join(__dirname, 'build'),
-        filename: 'index.js'
+        filename: 'index.js',
     },
     resolve: {
-        alias: require('./alias.config.js')
+        extensions: ['.js', '.jsx'],
+        modules: [path.resolve(__dirname, 'src/'), 'node_modules'],
     },
     resolveLoader: {
         alias: {
-            text: 'html-loader'
-        }
+            text: 'html-loader',
+        },
     },
     module: {
-        preLoaders: [
-            /** eslint */
+        rules: [
+            {test: /\.ge$/, loader: 'raw-loader'},
             {
+                enforce: 'pre',
                 test: /\.js$/,
+                exclude: /node_modules/,
                 loader: 'eslint-loader',
-                exclude: /node_modules/
-            }
-        ],
-
-        loaders: [
-            /** style */
-            {
-                test: /\.css/,
-                loader: 'style!css?sourceMap',
             },
 
-            /** babel */
             {
+                /** babel */
                 test: /\.jsx?$/,
-                loader: 'babel-loader',
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['env', 'react'],
+                    },
+                },
+            },
+
+            {
+                /** style */
+                test: /\.(less|css)$/,
                 exclude: /node_modules/,
-                query: {
-                    presets: ['es2015', 'react']
-                }
-            }
-        ]
-    }
+                use: [
+                    {loader: 'style-loader'},
+                    {loader: 'css-loader'},
+                    {loader: 'less-loader'},
+                ],
+            },
+        ],
+    },
 };
