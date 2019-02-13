@@ -1,16 +1,19 @@
-## geometries
-
 <p align="center">
     <img alt="geometries" src="./docs/logo.png" />
 </p>
 
-<br />
+## geometries [[**demo**](https://geometries.aleen42.com/)]
 
 <p align="center">
     <img alt="geometries" src="./docs/series.png" />
 </p>
 
 <br />
+
+[Here](https://geometries.aleen42.com/), you can check the demo directly. And there are a list of tasks to complete:
+
+- [ ] display syntax exceptions
+- [ ] syntax highlight
 
 "Geometries" is mainly a JavaScript project for writing a drawing compiler to generate complicated geometries. Inspired by [the project](https://github.com/aleen42/FuncDrawCompiler) written before with C Sharp, and UI rendered by WPF, I hope it can be also completed as a module in JavaScript. Furthermore, vector graphics can also be an awesome feature especially when a designer hopes to use programs to generate into what they are similar to.
 
@@ -23,13 +26,13 @@ FOR T FROM 0 TO 50*PI STEP 0.1 DRAW(COS(T)+1/1.3*COS(1.3*T), SIN(T)-1/1.3*SIN(1.
 ```
 
 To parse and understand such a language, we have to create a system containing three main parts:
- 
+
  1. [x] Scanner (Lexical Analysis, 詞法分析)
  2. [x] Parser (Syntactic Analysis, 語法分析)
  3. [x] Semantic (Semantic Analysis, 語義分析)
- 
+
 ### Scanner (Lexical Analysis)
- 
+
 Scanner is the module which duty is to scan through the whole sentence and figure out which word is a legal lexeme, while which one is not. For instance, in such a brief language, when you tell the engine to use Scanner module to scan through your giving sentence: "ORIGIN IS @", the Scanner module will find out that `@` is not a legal lexeme in such a language, and throws out an error like this: `Line Number: 0: NOT Wrong Token`.
 
 <p align="center">
@@ -45,7 +48,7 @@ In order to have a unit testing of this module, I have also written some specifi
     <img alt="scanner_test" src="./docs/scanner_test.jpg" />
 </p>
 <p align="center">
-    <strong>Figure 1.2</strong> Unit test for the Scanner module 
+    <strong>Figure 1.2</strong> Unit test for the Scanner module
 </p>
 
 ### Parser (Syntactic Analysis)
@@ -58,7 +61,7 @@ How can it understand a sentence with specific grammar? It relies on a series of
     <img alt="unexpected token" src="./docs/unexpected_token.jpg" />
 </p>
 <p align="center">
-    <strong>Figure 2.1</strong> <i>IS</i> is not an expected word 
+    <strong>Figure 2.1</strong> <i>IS</i> is not an expected word
 </p>
 
 After recognizing that the sentence is trying to specify *ORIGIN*, and the Parser module will try to match two words in next step: `IS` and `(`. Once matching the left bracket successfully, it will start to enter another phase named **Expression Phase**, in which the module should know whether x-axis is given a understanding expression like `2 * 25`, `25 + 25`, or a number `50` only. In current case, the module should get `2` in the **Atom Phase** firstly, and then, `*` has been matched during the **Term Phase**. So far has the module known that you need to calculate the x-axis value by multiplying a number by `2`. When trying to match another number, the engine has gotten a character `-` during **Factor Phase**, which means that another number should have a *MINUS* notation before it. Oh, there is another left bracket! The engine should be led into another **Expression Phase** ...
@@ -93,7 +96,7 @@ To make it more colorful, you can implement another showing way like what the me
 </p>
 
 In conclusion, the Parser module will try to parse a given sentence with recursive calling during different phases to try to understand what the sentence means. As we can see in the above example, there are **EIGHT** phases:
- 
+
  - **Parser Phase**: the entry of the module, in which the Scanner module will be used to read whole sentences
  - **Program Phase**: the program entry, in which the Parser module start to parse
  - **Statement Phase**: to parse *ORIGIN*, *SCALE*, *ROT*, and *FOR* statements
