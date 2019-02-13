@@ -13,8 +13,8 @@
  *  - Document: semantic.js
  *  - Author: aleen42
  *  - Description: A semantic module for specifying the meaning notations
- *  - Create Time: Oct, 12nd, 2017
- *  - Update Time: Jun, 6th, 2018
+ *  - Create Time: Oct 12nd, 2017
+ *  - Update Time: Feb 13rd, 2019
  *
  */
 
@@ -87,7 +87,7 @@ Semantic.prototype.calculateCoordinate = function (horizontalExpression, vertica
 
     return {
         x: horizontalCoordinate,
-        y: verticalCoordinate
+        y: verticalCoordinate,
     };
 };
 

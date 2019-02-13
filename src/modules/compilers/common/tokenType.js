@@ -13,8 +13,8 @@
  *  - Document: tokenType.js
  *  - Author: aleen42
  *  - Description: the type of token
- *  - Create Time: Oct, 12nd, 2017
- *  - Update Time: Jun, 6th, 2018
+ *  - Create Time: Oct 12nd, 2017
+ *  - Update Time: Feb 13rd, 2019
  *
  */
 
@@ -34,7 +34,7 @@ const tokenTypeName = [
     'ERRTOKEN', /** error notation (invalid input) */
     'INCREMENT', /** ++ operator */
     'DECREMENT', /** -- operator */
-    'MOD' /** % operator */
+    'MOD', /** % operator */
 ];
 
 /** @namespace TokenType.RESERVED      0 */
@@ -67,5 +67,5 @@ const tokenTypeName = [
 const TokenType = Util.enumerate(tokenTypeName);
 module.exports = {
     TokenType,
-    tokenTypeName
+    tokenTypeName,
 };

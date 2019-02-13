@@ -13,8 +13,8 @@
  *  - Document: content.js
  *  - Author: aleen42
  *  - Description: A data structure
- *  - Create Time: May, 31st, 2017
- *  - Update Time: Jun, 6th, 2018
+ *  - Create Time: May 31st, 2017
+ *  - Update Time: Feb 13rd, 2019
  *
  */
 
@@ -23,12 +23,12 @@ module.exports = function Content() {
     /** binary operators */
     this.caseOperator = {
         leftNode: null,
-        rightNode: null
+        rightNode: null,
     };
     /** functions */
     this.caseFunc = {
         mathFunc: null,
-        childNode: null
+        childNode: null,
     };
     /** const */
     this.caseConst = null;

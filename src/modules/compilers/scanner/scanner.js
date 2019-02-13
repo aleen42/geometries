@@ -13,8 +13,8 @@
  *  - Document: scanner.js
  *  - Author: aleen42
  *  - Description: A scanner module for scanning validated content
- *  - Create Time: May, 30th, 2017
- *  - Update Time: Jun, 6th, 2018
+ *  - Create Time: May 30th, 2017
+ *  - Update Time: Feb 13rd, 2019
  *
  */
 
@@ -54,7 +54,7 @@ class Scanner {
             { type: TokenType.FROM, lexeme: 'FROM', value: 0.0, callback: null },
             { type: TokenType.TO, lexeme: 'TO', value: 0.0, callback: null },
             { type: TokenType.STEP, lexeme: 'STEP', value: 0.0, callback: null },
-            { type: TokenType.DRAW, lexeme: 'DRAW', value: 0.0, callback: null }
+            { type: TokenType.DRAW, lexeme: 'DRAW', value: 0.0, callback: null },
         ].map(item => {
             this.tokenTabs.push(new Token(item.type, item.lexeme, item.value, item.callback));
         });
@@ -174,7 +174,7 @@ class Scanner {
                 '^': TokenType.POWER,
                 '%': TokenType.MOD,
                 '++': TokenType.INCREMENT,
-                '--': TokenType.DECREMENT
+                '--': TokenType.DECREMENT,
             }[character]
         };
 

@@ -48,7 +48,7 @@ function Parser(str, {
     isSyntaxTreeShown = false,
     drawingCallback = () => {},
     lineCompleted = () => {},
-    drawingCompleted = () => {}
+    drawingCompleted = () => {},
 } = {}) {
     /** a flag for setting debug process of the module, Parser */
     this.PARSE_DEBUG = debug;

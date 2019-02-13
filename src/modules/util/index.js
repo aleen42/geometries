@@ -14,8 +14,8 @@
  *  - Author: aleen42
  *  - Description: A util file for making some external functions
  *                 for helping
- *  - Create Time: May, 30th, 2017
- *  - Update Time: Jun, 6th, 2018
+ *  - Create Time: May 30th, 2017
+ *  - Update Time: Feb 13rd, 2019
  *
  *****************************************************************/
 
@@ -29,5 +29,5 @@ module.exports = {
         });
 
         return returnObj;
-    }
+    },
 };
