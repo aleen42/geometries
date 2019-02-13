@@ -13,12 +13,11 @@
  *  - Document: scanner.spec.js
  *  - Author: aleen42
  *  - Description: Unit tests for the module, Scanner.
- *  - Create Time: Oct, 12nd, 2017
- *  - Update Time: Jun, 6th, 2018
+ *  - Create Time: Oct 12nd, 2017
+ *  - Update Time: Feb 13rd, 2019
  *
  */
 
-/* global require, module */
 const Parser = require('./parser');
 const Chai = require('chai');
 const Color = require('../../util/color');
@@ -28,12 +27,9 @@ Chai.should();
 /* global describe, it */
 describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
     const checkResult = function (caseStr, expected) {
-        const escapeCharacter = function (str) {
-            return str.replace(/(\(|\)|\*|\+)/g, '\\$1');
-        };
-
+        const _escapeCharacter = str => str.replace(/([()*+])/g, '\\$1');
         const showColorfulResult = function (result) {
-            const indent = '        ';
+            const indent = Array(8).join(' ');
             let tempStr = '';
 
             console.log(
@@ -47,19 +43,19 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                     tempLexeme = tempLexeme === '3.1415926' ? 'PI' : tempLexeme;
                     tempLexeme = tempLexeme === '2.71828' ? 'E' : tempLexeme;
 
-                    const currentMatchedToken = new RegExp(`\\s*(${escapeCharacter(tempLexeme)})`).exec(caseStr);
+                    const currentMatchedToken = new RegExp(`\\s*(${_escapeCharacter(tempLexeme)})`).exec(caseStr);
 
                     let result = `${prefix}Match Token: ${type} (${Color.nestedColor('GREEN', Color.wrapColor('RED', lexeme))})\n`
                         .replace(/(Match Token: .+?)\n/gi, `${Color.nestedColor('YELLOW', Color.wrapColor('GREEN', '$1'))
                         + `\n${indent}${prefix}${new Array(Math.ceil((10 - prefix.match(/\| /g).length) / 4) + 5).join('\t')}`
                         + tempStr
                         + currentMatchedToken[0].replace(
-                            new RegExp(`(${escapeCharacter(currentMatchedToken[1])})`),
+                            new RegExp(`(${_escapeCharacter(currentMatchedToken[1])})`),
                             Color.nestedColor('YELLOW', Color.wrapColor('RED', '$1'))
                         )}\n`);
 
                     tempStr += currentMatchedToken[0];
-                    caseStr = caseStr.replace(new RegExp(escapeCharacter(currentMatchedToken[0])), '');
+                    caseStr = caseStr.replace(new RegExp(_escapeCharacter(currentMatchedToken[0])), '');
 
                     return result;
                 })
@@ -68,7 +64,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
 
         const result = new Parser(caseStr, {
             debug: true,
-            isSyntaxTreeShown: false
+            isSyntaxTreeShown: false,
         }).outputLog();
 
         showColorfulResult(result);

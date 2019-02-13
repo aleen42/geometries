@@ -13,12 +13,11 @@
  *  - Document: scanner.spec.js
  *  - Author: aleen42
  *  - Description: Unit tests for the module, Scanner.
- *  - Create Time: May, 30th, 2017
- *  - Update Time: Jun, 6th, 2018
+ *  - Create Time: May 30th, 2017
+ *  - Update Time: Feb 13rd, 2019
  *
  */
 
-/* global require */
 const { tokenTypeName } = require('../common/tokenType');
 const Scanner = require('./scanner');
 const Chai = require('chai');
@@ -31,7 +30,7 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Scanner'), () => {
     const scanner = new Scanner();
     scanner.initTokenTab();
 
-    const checkResult = function (caseStr, expected) {
+    const _checkResult = (caseStr, expected) => {
         scanner.readInput(caseStr);
         const token = scanner.getToken();
 
@@ -41,38 +40,38 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Scanner'), () => {
     };
 
     it('PI', () => {
-        checkResult('PI', 'type: CONST_ID, lexeme: PI, value: 3.1415926');
+        _checkResult('PI', 'type: CONST_ID, lexeme: PI, value: 3.1415926');
     });
 
     it('ORIGIN', () => {
-        checkResult('ORIGIN', 'type: ORIGIN, lexeme: ORIGIN, value: 0');
+        _checkResult('ORIGIN', 'type: ORIGIN, lexeme: ORIGIN, value: 0');
     });
 
     it('IS', () => {
-        checkResult('IS', 'type: IS, lexeme: IS, value: 0');
+        _checkResult('IS', 'type: IS, lexeme: IS, value: 0');
     });
 
     it('COS', () => {
-        checkResult('COS', 'type: FUNC, lexeme: COS, value: 0');
+        _checkResult('COS', 'type: FUNC, lexeme: COS, value: 0');
     });
 
     it('NOT', () => {
-        checkResult('NOT', 'type: RESERVED, lexeme: NOT, value: 0');
+        _checkResult('NOT', 'type: RESERVED, lexeme: NOT, value: 0');
     });
 
     it('SITA', () => {
-        checkResult('SITA', 'type: VAR, lexeme: SITA, value: 0');
+        _checkResult('SITA', 'type: VAR, lexeme: SITA, value: 0');
     });
 
     it('SITA1', () => {
-        checkResult('SITA1', 'type: VAR, lexeme: SITA1, value: 0');
+        _checkResult('SITA1', 'type: VAR, lexeme: SITA1, value: 0');
     });
 
     it('SITA_1', () => {
-        checkResult('SITA_1', 'type: VAR, lexeme: SITA_1, value: 0');
+        _checkResult('SITA_1', 'type: VAR, lexeme: SITA_1, value: 0');
     });
 
     it('@', () => {
-        checkResult('@', 'type: ERRTOKEN, lexeme: @, value: 0');
+        _checkResult('@', 'type: ERRTOKEN, lexeme: @, value: 0');
     });
 });
