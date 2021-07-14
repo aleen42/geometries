@@ -1,0 +1,33 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+        with:
+          ref: master
+      - uses: actions/setup-node@v2-beta
+        with:
+          node-version: '13'
+      - name: Build
+        run: |
+          npm version
+          npm install --no-save --no-audit
+          npm run build
+          mkdir gh-pages
+          mv CNAME ./gh-pages/
+          mv build ./gh-pages/
+          mv index.html ./gh-pages/
+      - name: Deploy
+        uses: aleen42/github-pages-deploy-action@master
+        env:
+          ACCESS_TOKEN: ${{secrets.ACCESS_TOKEN}}
+          BRANCH: gh-pages
+          FOLDER: gh-pages
