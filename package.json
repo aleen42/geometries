@@ -1,8 +1,8 @@
 {
-  "name": "geometries",
+  "name": "@aleen42/geometries",
   "version": "1.0.0",
   "description": "a JavaScript project for writing a drawing compiler to generate complicated geometries",
-  "main": "index.js",
+  "main": "src/modules/compilers/parser/parser.js",
   "scripts": {
     "build": "webpack --progress --profile --colors",
     "watch": "webpack --progress --profile --colors -d --watch",
