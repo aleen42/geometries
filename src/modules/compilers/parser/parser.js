@@ -235,25 +235,26 @@ Parser.prototype.program = function () {
                         /** Atom Recursive Function */
                         function atom() {
                             let addressNode;
-                            let tempNode;
-                            let curToken = self.token;
+                            const curToken = self.token;
+                            const tokenType = curToken.type;
 
                             self.enter('Atom');
 
-                            switch (self.token.type) {
+                            switch (tokenType) {
                             case TokenType.CONST_ID:
-                                self.matchToken(TokenType.CONST_ID, curToken.value);
-                                addressNode = self.makeExprNode(TokenType.CONST_ID, curToken.value, null, null);
-                                break;
                             case TokenType.VAR:
-                                self.matchToken(TokenType.VAR, curToken.lexeme);
-                                addressNode = self.makeExprNode(TokenType.VAR, curToken.lexeme, null, null);
+                                const val = {
+                                    [TokenType.CONST_ID]: curToken.value,
+                                    [TokenType.VAR]: curToken.lexeme,
+                                }[tokenType];
+
+                                self.matchToken(tokenType, val);
+                                addressNode = self.makeExprNode(tokenType, val, null, null);
                                 break;
                             case TokenType.FUNC:
                                 self.matchToken(TokenType.FUNC);
                                 self.matchToken(TokenType.L_BRACKET);
-                                tempNode = expression.call(self);
-                                addressNode = self.makeExprNode(TokenType.FUNC, null, tempNode, curToken.callback);
+                                addressNode = self.makeExprNode(TokenType.FUNC, null, expression.call(self), curToken.callback);
                                 self.matchToken(TokenType.R_BRACKET);
                                 break;
                             case TokenType.L_BRACKET:
@@ -272,26 +273,25 @@ Parser.prototype.program = function () {
 
                         let leftNode;
                         let rightNode;
-                        let tempTokenType;
 
                         self.enter('Component');
 
-                        if (self.token.type === TokenType.INCREMENT || self.token.type === TokenType.DECREMENT) {
+                        let curTokenType = self.token.type;
+                        if (curTokenType === TokenType.INCREMENT || curTokenType === TokenType.DECREMENT) {
                             /** pre-increment or pre-decrement */
-                            tempTokenType = self.token.type;
-                            self.matchToken(tempTokenType);
-                            leftNode = self.makeExprNode(tempTokenType, null, atom.call(self), null);
+                            self.matchToken(curTokenType);
+                            leftNode = self.makeExprNode(curTokenType, null, atom.call(self), null);
                         } else {
                             leftNode = atom.call(self);
+                            curTokenType = self.token.type;
 
-                            if (self.token.type === TokenType.INCREMENT || self.token.type === TokenType.DECREMENT) {
+                            if (curTokenType === TokenType.INCREMENT || curTokenType === TokenType.DECREMENT) {
                                 /** post-increment or post-decrement */
-                                tempTokenType = self.token.type;
-                                self.matchToken(tempTokenType);
-                                leftNode = self.makeExprNode(tempTokenType, leftNode, null, null);
+                                self.matchToken(curTokenType);
+                                leftNode = self.makeExprNode(curTokenType, leftNode, null, null);
                             }
 
-                            if (self.token.type === TokenType.POWER) {
+                            if (curTokenType === TokenType.POWER) {
                                 self.matchToken(TokenType.POWER);
                                 rightNode = component.call(self);
                                 leftNode = self.makeExprNode(TokenType.POWER, leftNode, rightNode, null);
