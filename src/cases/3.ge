@@ -6,8 +6,8 @@ FOR SITA FROM 0 TO 20 * PI / 360 STEP PI / 360
         DRAW (
             COS(K * 2 / 10 * PI - PI / 2 - SITA)
                 * (1 - K % 2 * 0.5)
-                * (SITA / PI * 75 + 1),
+                * (SITA / PI * 75 + --2),
             SIN(K * 2 / 10 * PI - PI / 2 - SITA)
                 * (1 - K % 2 * 0.5)
-                * (SITA / PI * 75 + 1)
+                * (SITA / PI * 75 + 1++)
         );

@@ -32,6 +32,12 @@ Semantic.prototype.getExpressionValue = function (root) {
         return 0;
     }
 
+    const leftHandExpression = val => {
+        if (leftNode && leftNode.tokenType === TokenType.VAR) {
+            this.parser.variables.filter(item => item === leftNode)[0].content.caseParamPtr.parameter += val;
+        }
+        return this.getExpressionValue(leftNode || rightNode) + (rightNode ? val : 0);
+    };
     const {caseOperator, caseFunc, caseConst} = root.content;
     let {leftNode, rightNode} = caseOperator;
     return ({
@@ -41,8 +47,8 @@ Semantic.prototype.getExpressionValue = function (root) {
         [TokenType.DIV]: () => this.getExpressionValue(leftNode) / this.getExpressionValue(rightNode),
         [TokenType.MOD]: () => this.getExpressionValue(leftNode) % this.getExpressionValue(rightNode),
         [TokenType.POWER]: () => Math.pow(this.getExpressionValue(leftNode), this.getExpressionValue(rightNode)),
-        [TokenType.INCREMENT]: () => leftNode ? leftNode++ : ++rightNode,
-        [TokenType.DECREMENT]: () => leftNode ? leftNode-- : --rightNode,
+        [TokenType.INCREMENT]: () => leftHandExpression(1),
+        [TokenType.DECREMENT]: () => leftHandExpression(-1),
         [TokenType.FUNC]: () => caseFunc.mathFunc(this.getExpressionValue(caseFunc.childNode)),
         [TokenType.CONST_ID]: () => caseConst,
         [TokenType.VAR]: () => this.parser.variables.filter(item => item === root)[0].content.caseParamPtr.parameter,

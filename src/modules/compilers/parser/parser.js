@@ -141,18 +141,15 @@ Parser.prototype.printSyntaxTree = function (root, indent) {
     }
 };
 
-Parser.prototype.errMsg = function (info, lineNumber, description, str) {
-    if (this.PARSE_DEBUG) {
-        this.log(`${info} Line Number: ${lineNumber}: ${str} ${description}`)
-    }
-
+Parser.prototype.errMsg = function (lineNumber, description, str) {
     this.scanner.close();
+    throw `Line Number: ${lineNumber}: ${str} ${description}`;
 };
 
 Parser.prototype.syntaxError = function (description) {
     if (this.scanner.lineNumber !== this.errorLineNumber) {
         this.indent++;
-        this.errMsg(formatInfo(this.indent), this.scanner.lineNumber, description, this.token.lexeme);
+        this.errMsg(this.scanner.lineNumber, description, this.token.lexeme);
         this.indent--;
     }
 };
@@ -203,6 +200,15 @@ Parser.prototype.makeExprNode = function (tokenType, leftNode, rightNode, funcPt
     case TokenType.FUNC:
         node.content.caseFunc.mathFunc = funcPtr;
         node.content.caseFunc.childNode = rightNode;
+        break;
+    case TokenType.INCREMENT:
+    case TokenType.DECREMENT:
+        if (![TokenType.CONST_ID, TokenType.VAR].includes((leftNode || rightNode).tokenType)) {
+            this.syntaxError(`Invalid left-hand side expression in ${leftNode ? 'postfix' : 'prefix'} operation`);
+            this.errorLineNumber = this.scanner.lineNumber;
+        }
+        node.content.caseOperator.leftNode = leftNode;
+        node.content.caseOperator.rightNode = rightNode;
         break;
     default:
         node.content.caseOperator.leftNode = leftNode;

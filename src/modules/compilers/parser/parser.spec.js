@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: Unit tests for the module, Scanner.
  *  - Create Time: Oct 12nd, 2017
- *  - Update Time: Feb 13rd, 2019
+ *  - Update Time: Jul 19th, 2021
  *
  */
 
@@ -225,5 +225,12 @@ describe(Color.wrapColor('GREEN', 'Unit tests for the module, Parser'), () => {
                  Exit from Program
              Exit from Parser
         `);
+    });
+
+    it('Exception', () => {
+        (() => new Parser('INVALID')).should.throw('Line Number: 0: INVALID Unexpected Token');
+        (() => new Parser('@B')).should.throw('Line Number: 0: @ Wrong Token');
+        (() => new Parser('ORIGIN IS (++SIN(1), 300);')).should.throw('Line Number: 0: , Invalid left-hand side expression in prefix operation');
+        (() => new Parser('ORIGIN IS (COS(2)--, 300);')).should.throw('Line Number: 0: , Invalid left-hand side expression in postfix operation');
     });
 });
