@@ -19,51 +19,34 @@
  */
 
 /* global require, module */
-const { TokenType } = require('../common/tokenType');
+const {TokenType} = require('../common/tokenType');
 
 function Semantic(parser) {
     this.parser = parser;
 }
 
-Semantic.prototype.errMsg = function () {
-    /** catch and ignore */
-    return null;
-};
+Semantic.prototype.errMsg = () => null; /** catch and ignore */
 
 Semantic.prototype.getExpressionValue = function (root) {
     if (root === null) {
         return 0;
     }
 
-    const content = root.content;
-    const caseOperator = content.caseOperator;
-    switch (root.tokenType) {
-    case TokenType.PLUS:
-        return this.getExpressionValue(caseOperator.leftNode) + this.getExpressionValue(caseOperator.rightNode);
-    case TokenType.MINUS:
-        return this.getExpressionValue(caseOperator.leftNode) - this.getExpressionValue(caseOperator.rightNode);
-    case TokenType.MUL:
-        return this.getExpressionValue(caseOperator.leftNode) * this.getExpressionValue(caseOperator.rightNode);
-    case TokenType.DIV:
-        return this.getExpressionValue(caseOperator.leftNode) / this.getExpressionValue(caseOperator.rightNode);
-    case TokenType.MOD:
-        return this.getExpressionValue(caseOperator.leftNode) % this.getExpressionValue(caseOperator.rightNode);
-    case TokenType.POWER:
-        return Math.pow(this.getExpressionValue(caseOperator.leftNode), this.getExpressionValue(caseOperator.rightNode));
-    case TokenType.INCREMENT:
-        return caseOperator.leftNode ? caseOperator.leftNode++ : ++caseOperator.rightNode;
-    case TokenType.DECREMENT:
-        return caseOperator.leftNode ? caseOperator.leftNode-- : --caseOperator.rightNode;
-    case TokenType.FUNC:
-        const caseFunc = content.caseFunc;
-        return caseFunc.mathFunc(this.getExpressionValue(caseFunc.childNode));
-    case TokenType.CONST_ID:
-        return content.caseConst;
-    case TokenType.VAR:
-        return this.parser.variables.filter(item => item === root)[0].content.caseParamPtr.parameter;
-    default:
-        return 0;
-    }
+    const {caseOperator, caseFunc, caseConst} = root.content;
+    let {leftNode, rightNode} = caseOperator;
+    return ({
+        [TokenType.PLUS]: () => this.getExpressionValue(leftNode) + this.getExpressionValue(rightNode),
+        [TokenType.MINUS]: () => this.getExpressionValue(leftNode) - this.getExpressionValue(rightNode),
+        [TokenType.MUL]: () => this.getExpressionValue(leftNode) * this.getExpressionValue(rightNode),
+        [TokenType.DIV]: () => this.getExpressionValue(leftNode) / this.getExpressionValue(rightNode),
+        [TokenType.MOD]: () => this.getExpressionValue(leftNode) % this.getExpressionValue(rightNode),
+        [TokenType.POWER]: () => Math.pow(this.getExpressionValue(leftNode), this.getExpressionValue(rightNode)),
+        [TokenType.INCREMENT]: () => leftNode ? leftNode++ : ++rightNode,
+        [TokenType.DECREMENT]: () => leftNode ? leftNode-- : --rightNode,
+        [TokenType.FUNC]: () => caseFunc.mathFunc(this.getExpressionValue(caseFunc.childNode)),
+        [TokenType.CONST_ID]: () => caseConst,
+        [TokenType.VAR]: () => this.parser.variables.filter(item => item === root)[0].content.caseParamPtr.parameter,
+    }[root.tokenType] || (() => 0))();
 };
 
 /** calculate the coordinate according to original one and changes on it */
@@ -71,19 +54,20 @@ Semantic.prototype.calculateCoordinate = function (horizontalExpression, vertica
     let horizontalCoordinate = this.getExpressionValue(horizontalExpression);
     let verticalCoordinate = this.getExpressionValue(verticalExpression);
 
+    const {scaleX, scaleY, rotateAngle, originX, originY} = this.parser;
+
     /** scale */
-    horizontalCoordinate *= this.parser.scaleX;
-    verticalCoordinate *= this.parser.scaleY;
+    horizontalCoordinate *= scaleX;
+    verticalCoordinate *= scaleY;
 
     /** rotate */
-    const rotateAngle = this.parser.rotateAngle;
     const temp = horizontalCoordinate * Math.cos(rotateAngle) + verticalCoordinate * Math.sin(rotateAngle);
     verticalCoordinate = verticalCoordinate * Math.cos(rotateAngle) - horizontalCoordinate * Math.sin(rotateAngle);
     horizontalCoordinate = temp;
 
     /** move */
-    horizontalCoordinate += this.parser.originX;
-    verticalCoordinate += this.parser.originY;
+    horizontalCoordinate += originX;
+    verticalCoordinate += originY;
 
     return {
         x: horizontalCoordinate,
@@ -104,22 +88,15 @@ Semantic.prototype.deleteExpressionTree = function (root) {
     }
 
     const content = root.content;
-    switch (root.tokenType) {
-    case TokenType.PLUS:
-    case TokenType.MINUS:
-    case TokenType.MUL:
-    case TokenType.DIV:
-    case TokenType.POWER:
-    case TokenType.MOD:
-        const caseOperator = content.caseOperator;
-        this.deleteExpressionTree(caseOperator.leftNode);
-        this.deleteExpressionTree(caseOperator.rightNode);
-        break;
-    case TokenType.FUNC:
+    const tokenType = root.tokenType;
+    if ([
+        TokenType.PLUS, TokenType.MINUS, TokenType.MUL, TokenType.DIV, TokenType.POWER, TokenType.MOD,
+    ].includes(tokenType)) {
+        const {leftNode, rightNode} = content.caseOperator;
+        this.deleteExpressionTree(leftNode);
+        this.deleteExpressionTree(rightNode);
+    } else if (tokenType === TokenType.FUNC) {
         this.deleteExpressionTree(content.caseFunc.childNode);
-        break;
-    default:
-        break;
     }
 
     /** delete the root node */

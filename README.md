@@ -32,7 +32,7 @@ new Parser(str, {
         pointsArr.push(y);
     },
     lineCompleted: () => {
-        pathsArr.push(`<path fill="none" stroke="${self.props.color}"
+        pathsArr.push(`<path fill="none" stroke="#000"
             stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
             d="M${pointsArr.shift()},${pointsArr.shift()}L${pointsArr.join(' ')}"/>`);
         // reset storing points of each line
@@ -45,7 +45,7 @@ new Parser(str, {
             + 'xmlns:xlink="http://www.w3.org/1999/xlink"'
             + ' width="500" height="500">' + pathsArr.join('\n') + '</svg>', 'utf8');
     },
-})
+});
 ```
 
 ### TODO
