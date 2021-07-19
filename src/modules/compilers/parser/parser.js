@@ -103,73 +103,30 @@ Parser.prototype.outputLog = function () {
 
 Parser.prototype.enter = function (str) {
     if (this.PARSE_DEBUG && !this.scanner.isScannerClosed) {
-        let info = '';
-        this.indent++;
-
-        for (let i = 1; i <= this.indent; i++) {
-            info += '\t';
-        }
-
-        this.log(`${info} Enter in ${str}`);
+        this.log(formatInfo(++this.indent, `Enter in ${str}`));
     }
 };
 
 Parser.prototype.back = function (str) {
     if (this.PARSE_DEBUG && !this.scanner.isScannerClosed) {
-        let info = '';
-
-        for (let i = 1; i <= this.indent; i++) {
-            info += '\t';
-        }
-
-        this.log(`${info} Exit from ${str}`);
-        this.indent--;
+        this.log(formatInfo(this.indent--, `Exit from ${str}`));
     }
 };
 
 Parser.prototype.printSyntaxTree = function (root, indent) {
-    let info = '';
+    const info = {
+        [TokenType.PLUS]: '+',
+        [TokenType.MINUS]: '-',
+        [TokenType.MUL]: '*',
+        [TokenType.DIV]: '/',
+        [TokenType.POWER]: '^',
+        [TokenType.MOD]: '%',
+        [TokenType.FUNC]: () => root.content.caseFunc.mathFunc.name,
+        [TokenType.CONST_ID]: () => root.content.caseConst,
+        [TokenType.VAR]: () => root.content.caseConst,
+    }[root.tokenType] || 'Error Tree Node!';
 
-    for (let i = 1; i <= this.indent + 1; i++) {
-        info += '\t';
-    }
-
-    for (let i = 1; i <= indent; i++) {
-        info += '\t';
-    }
-
-    switch (root.tokenType) {
-    case TokenType.PLUS:
-        this.log(`${info} +`);
-        break;
-    case TokenType.MINUS:
-        this.log(`${info} -`);
-        break;
-    case TokenType.MUL:
-        this.log(`${info} *`);
-        break;
-    case TokenType.DIV:
-        this.log(`${info} /`);
-        break;
-    case TokenType.POWER:
-        this.log(`${info} ^`);
-        break;
-    case TokenType.MOD:
-        this.log(`${info} %`);
-        break;
-    case TokenType.FUNC:
-        this.log(`${info} ${root.content.caseFunc.mathFunc.name}`);
-        break;
-    case TokenType.CONST_ID:
-        this.log(`${info} ${root.content.caseConst}`);
-        break;
-    case TokenType.VAR:
-        this.log(`${info} ${root.content.caseConst}`);
-        break;
-    default:
-        this.log(`${info} Error Tree Node!`);
-        return;
-    }
+    this.log(formatInfo(this.indent + 1 + indent, info.call ? info() : info));
 
     if (root.tokenType === TokenType.CONST_ID
         || root.tokenType === TokenType.VAR) {
@@ -194,15 +151,8 @@ Parser.prototype.errMsg = function (info, lineNumber, description, str) {
 
 Parser.prototype.syntaxError = function (description) {
     if (this.scanner.lineNumber !== this.errorLineNumber) {
-        let info = '';
         this.indent++;
-
-        for (let i = 1; i <= this.indent; i++) {
-            info += '\t';
-        }
-
-        this.errMsg(info, this.scanner.lineNumber, description, this.token.lexeme);
-
+        this.errMsg(formatInfo(this.indent), this.scanner.lineNumber, description, this.token.lexeme);
         this.indent--;
     }
 };
@@ -224,13 +174,7 @@ Parser.prototype.matchToken = function (tokenType, value) {
         this.errorLineNumber = this.scanner.lineNumber;
     } else {
         if (this.PARSE_DEBUG) {
-            let info = '';
-
-            for (let i = 1; i <= this.indent + 1; i++) {
-                info += '\t';
-            }
-
-            this.log(`${info} Match Token: ${tokenTypeName[tokenType]} (${value})`);
+            this.log(formatInfo(this.indent + 1, `Match Token: ${tokenTypeName[tokenType]} (${value})`));
         }
     }
 
@@ -246,9 +190,9 @@ Parser.prototype.makeExprNode = function (tokenType, leftNode, rightNode, funcPt
         node.content.caseConst = parseFloat(leftNode);
         break;
     case TokenType.VAR:
-		/** get the same variable node */
+        /** get the same variable node */
         const variableNode = this.variables.filter(item => item.content.caseConst === leftNode)[0];
-		if (variableNode) {
+        if (variableNode) {
             node = variableNode;
         } else {
             node.content.caseConst = leftNode;
@@ -562,7 +506,7 @@ Parser.prototype.program = function () {
                 if (!self.PARSE_DEBUG) {
                     loopNode.execute = function () {
                         const pointer = loopNode.content.caseParamPtr;
-						for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
+                        for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
                             loopNode.childLoopNode.execute();
                         }
                     };
@@ -585,7 +529,7 @@ Parser.prototype.program = function () {
                 if (!self.PARSE_DEBUG) {
                     loopNode.execute = function () {
                         const pointer = loopNode.content.caseParamPtr;
-						for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
+                        for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
                             self.semantic.draw(x, y);
                             self.semantic.deleteExpressionTree(x);
                             self.semantic.deleteExpressionTree(y);
@@ -635,5 +579,9 @@ Parser.prototype.program = function () {
 
     self.back('Program');
 };
+
+function formatInfo(indent, msg) {
+    return `${Array(indent).fill('\t').join('')}${msg ? ` ${msg}` : ''}`;
+}
 
 module.exports = Parser;
