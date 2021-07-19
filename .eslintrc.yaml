@@ -4,3 +4,5 @@ root    : true
 extends : aleen42
 
 # project specific config
+rules:
+  no-throw-literal : [off]
