@@ -13,8 +13,8 @@
  *  - Document: parser.js
  *  - Author: aleen42
  *  - Description: A parser module for parsing content
- *  - Create Time: May, 31st, 2017
- *  - Update Time: Jun, 6th, 2018
+ *  - Create Time: May 31st, 2017
+ *  - Update Time: Jul 19th, 2021
  *
  */
 
@@ -246,9 +246,9 @@ Parser.prototype.makeExprNode = function (tokenType, leftNode, rightNode, funcPt
         node.content.caseConst = parseFloat(leftNode);
         break;
     case TokenType.VAR:
-        /** get the same variable node */
-        var variableNode = this.variables.filter(item => item.content.caseConst === leftNode)[0];
-        if (variableNode) {
+		/** get the same variable node */
+        const variableNode = this.variables.filter(item => item.content.caseConst === leftNode)[0];
+		if (variableNode) {
             node = variableNode;
         } else {
             node.content.caseConst = leftNode;
@@ -561,8 +561,8 @@ Parser.prototype.program = function () {
 
                 if (!self.PARSE_DEBUG) {
                     loopNode.execute = function () {
-                        var pointer = loopNode.content.caseParamPtr;
-                        for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
+                        const pointer = loopNode.content.caseParamPtr;
+						for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
                             loopNode.childLoopNode.execute();
                         }
                     };
@@ -584,8 +584,8 @@ Parser.prototype.program = function () {
 
                 if (!self.PARSE_DEBUG) {
                     loopNode.execute = function () {
-                        var pointer = loopNode.content.caseParamPtr;
-                        for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
+                        const pointer = loopNode.content.caseParamPtr;
+						for (pointer.parameter = start; pointer.parameter <= end; pointer.parameter += step) {
                             self.semantic.draw(x, y);
                             self.semantic.deleteExpressionTree(x);
                             self.semantic.deleteExpressionTree(y);

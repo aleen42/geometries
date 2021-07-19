@@ -14,7 +14,7 @@
  *  - Author: aleen42
  *  - Description: A semantic module for specifying the meaning notations
  *  - Create Time: Oct 12nd, 2017
- *  - Update Time: Feb 13rd, 2019
+ *  - Update Time: Jul 19th, 2021
  *
  */
 
@@ -93,8 +93,8 @@ Semantic.prototype.calculateCoordinate = function (horizontalExpression, vertica
 
 /** loop for drawing */
 Semantic.prototype.draw = function (horizontalPtr, verticalPtr) {
-    var coordinate = this.calculateCoordinate(horizontalPtr, verticalPtr);
-    this.parser.drawCallback(coordinate.x, coordinate.y);
+    const {x, y} = this.calculateCoordinate(horizontalPtr, verticalPtr);
+    this.parser.drawCallback(x, y);
 };
 
 /** remove a syntax tree */
