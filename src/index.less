@@ -1,9 +1,13 @@
 html,
 body,
 div.container,
-div.view-container,
-div.geometries-wrapper {
+div.view-container {
+    width: 100%;
     height: 100%
+}
+
+div.geometries-wrapper {
+    height: 100%;
 }
 
 body {
@@ -15,8 +19,9 @@ body {
 
 .container {
     .geometries-wrapper,
-    .ace-editor {
+    .ace_editor {
         display: inline-block;
+        vertical-align: top;
     }
 
     .brand {
@@ -46,6 +51,31 @@ body {
             cursor: pointer;
             font-size: 16px;
             border-radius: 5px;
+        }
+    }
+
+    @media (max-width: 720px) {
+        .ace_editor {
+            width: 100% !important;
+            height: 250px !important;
+            position: fixed;
+            bottom: 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.3);
+        }
+
+        .buttons {
+            width: 100% !important;
+        }
+
+        div.geometries-wrapper {
+            width: 100%;
+            height: calc(100% - 250px);
+            overflow: auto;
+        }
+
+        .geometries-wrapper,
+        .ace_editor {
+            display: block;
         }
     }
 }

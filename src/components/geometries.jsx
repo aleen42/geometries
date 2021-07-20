@@ -62,7 +62,7 @@ class Geometries extends React.Component {
     render() {
         return <div className="geometries-wrapper">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                width={this.props.size} height="calc(100% - 32px)"
+                width={this.props.size} height="500px"
                 ref={svg => {
                     this.svg = svg;
                 }}/>

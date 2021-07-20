@@ -93,7 +93,7 @@ class View extends React.Component {
                 {cases.map((c, index) => <button key={index} onClick={() => {
                     value = c;
                     this.setState({value: c});
-                }}>Demo {index + 1}</button>)}
+                }}>{index + 1}</button>)}
                 <button onClick={() => {
                     this.setState({value});
                 }}>Convert</button>
